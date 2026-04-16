@@ -1,9 +1,11 @@
 package client
 
 import (
+	"bytes"
 	"context"
 	"crypto/ed25519"
 	"encoding/hex"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -11,14 +13,16 @@ import (
 	"time"
 )
 
+var ErrFailedToDecode = errors.New("failed to decode")
+
 func NewDmarketAuth(privKeyHex, pubKeyHex string) (*DmarketAuth, error) {
 	privKey, err := hex.DecodeString(privKeyHex)
 	if err != nil {
-		return nil, fmt.Errorf("failed to decode private key: %w", err)
+		return nil, fmt.Errorf("%w private key: %w", ErrFailedToDecode, err)
 	}
 	pubKey, err := hex.DecodeString(pubKeyHex)
 	if err != nil {
-		return nil, fmt.Errorf("failed to decode public key: %w", err)
+		return nil, fmt.Errorf("%w public key: %w", ErrFailedToDecode, err)
 	}
 	return &DmarketAuth{
 		privKey: privKey,
@@ -31,7 +35,7 @@ type DmarketAuth struct {
 	pubKey  []byte
 }
 
-func (d *DmarketAuth) BuildStringToSign(method, apiUrlPath, body string, timestamp string) string {
+func (d *DmarketAuth) BuildStringToSign(method, apiUrlPath, body, timestamp string) string {
 	return fmt.Sprintf("%s%s%s%s", method, apiUrlPath, body, timestamp)
 }
 
@@ -45,17 +49,20 @@ func (d *DmarketAuth) Middleware() func(ctx context.Context, req *http.Request) 
 		method := req.Method
 		timestamp := strconv.FormatInt(time.Now().Unix(), 10)
 		apiUrlPath := req.URL.Path + req.URL.Query().Encode()
-		reader, err := req.GetBody()
-		if err != nil {
-			return err
-		}
-		bodyBytes := make([]byte, 0)
-		if reader != nil {
-			bodyBytes, err = io.ReadAll(reader)
+		var bodyBytes []byte
+		var err error
+
+		// 2. Read from req.Body instead of GetBody()
+		if req.Body != nil && req.Body != http.NoBody {
+			bodyBytes, err = io.ReadAll(req.Body)
 			if err != nil {
 				return err
 			}
+			// 3. IMPORTANT: Put the bytes back into the body so
+			// the next handler can read it.
+			req.Body = io.NopCloser(bytes.NewReader(bodyBytes))
 		}
+
 		stringToSign := d.BuildStringToSign(method, apiUrlPath, string(bodyBytes), timestamp)
 		signature, err := d.SignString(stringToSign)
 

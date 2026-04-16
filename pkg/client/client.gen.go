@@ -12,8 +12,16 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"time"
 
 	"github.com/oapi-codegen/runtime"
+)
+
+// Defines values for GameID.
+const (
+	GameIDA8db  GameID = "a8db"
+	GameIDN9a9d GameID = "9a9d"
+	GameIDRust  GameID = "rust"
 )
 
 // Defines values for GetLastSalesResponseSaleTxOperationType.
@@ -30,38 +38,6 @@ const (
 	EntityExtraExteriorMinimalWear   EntityExtraExterior = "minimal wear"
 	EntityExtraExteriorNotPainted    EntityExtraExterior = "not painted"
 	EntityExtraExteriorWellWorn      EntityExtraExterior = "well-worn"
-)
-
-// Defines values for EntityExtraFloatPartValue.
-const (
-	EntityExtraFloatPartValueBS0   EntityExtraFloatPartValue = "BS-0"
-	EntityExtraFloatPartValueBS1   EntityExtraFloatPartValue = "BS-1"
-	EntityExtraFloatPartValueBS2   EntityExtraFloatPartValue = "BS-2"
-	EntityExtraFloatPartValueBS3   EntityExtraFloatPartValue = "BS-3"
-	EntityExtraFloatPartValueBS4   EntityExtraFloatPartValue = "BS-4"
-	EntityExtraFloatPartValueEmpty EntityExtraFloatPartValue = ""
-	EntityExtraFloatPartValueFN0   EntityExtraFloatPartValue = "FN-0"
-	EntityExtraFloatPartValueFN1   EntityExtraFloatPartValue = "FN-1"
-	EntityExtraFloatPartValueFN2   EntityExtraFloatPartValue = "FN-2"
-	EntityExtraFloatPartValueFN3   EntityExtraFloatPartValue = "FN-3"
-	EntityExtraFloatPartValueFN4   EntityExtraFloatPartValue = "FN-4"
-	EntityExtraFloatPartValueFN5   EntityExtraFloatPartValue = "FN-5"
-	EntityExtraFloatPartValueFN6   EntityExtraFloatPartValue = "FN-6"
-	EntityExtraFloatPartValueFT0   EntityExtraFloatPartValue = "FT-0"
-	EntityExtraFloatPartValueFT1   EntityExtraFloatPartValue = "FT-1"
-	EntityExtraFloatPartValueFT2   EntityExtraFloatPartValue = "FT-2"
-	EntityExtraFloatPartValueFT3   EntityExtraFloatPartValue = "FT-3"
-	EntityExtraFloatPartValueFT4   EntityExtraFloatPartValue = "FT-4"
-	EntityExtraFloatPartValueMW0   EntityExtraFloatPartValue = "MW-0"
-	EntityExtraFloatPartValueMW1   EntityExtraFloatPartValue = "MW-1"
-	EntityExtraFloatPartValueMW2   EntityExtraFloatPartValue = "MW-2"
-	EntityExtraFloatPartValueMW3   EntityExtraFloatPartValue = "MW-3"
-	EntityExtraFloatPartValueMW4   EntityExtraFloatPartValue = "MW-4"
-	EntityExtraFloatPartValueWW0   EntityExtraFloatPartValue = "WW-0"
-	EntityExtraFloatPartValueWW1   EntityExtraFloatPartValue = "WW-1"
-	EntityExtraFloatPartValueWW2   EntityExtraFloatPartValue = "WW-2"
-	EntityExtraFloatPartValueWW3   EntityExtraFloatPartValue = "WW-3"
-	EntityExtraFloatPartValueWW4   EntityExtraFloatPartValue = "WW-4"
 )
 
 // Defines values for EntityItemExtraDoc.
@@ -151,56 +127,43 @@ const (
 	EntityOfferPriceTypeP2p     EntityOfferPriceType = "p2p"
 )
 
+// Defines values for FloatPartValue.
+const (
+	FloatPartValueBS0   FloatPartValue = "BS-0"
+	FloatPartValueBS1   FloatPartValue = "BS-1"
+	FloatPartValueBS2   FloatPartValue = "BS-2"
+	FloatPartValueBS3   FloatPartValue = "BS-3"
+	FloatPartValueBS4   FloatPartValue = "BS-4"
+	FloatPartValueEmpty FloatPartValue = ""
+	FloatPartValueFN0   FloatPartValue = "FN-0"
+	FloatPartValueFN1   FloatPartValue = "FN-1"
+	FloatPartValueFN2   FloatPartValue = "FN-2"
+	FloatPartValueFN3   FloatPartValue = "FN-3"
+	FloatPartValueFN4   FloatPartValue = "FN-4"
+	FloatPartValueFN5   FloatPartValue = "FN-5"
+	FloatPartValueFN6   FloatPartValue = "FN-6"
+	FloatPartValueFT0   FloatPartValue = "FT-0"
+	FloatPartValueFT1   FloatPartValue = "FT-1"
+	FloatPartValueFT2   FloatPartValue = "FT-2"
+	FloatPartValueFT3   FloatPartValue = "FT-3"
+	FloatPartValueFT4   FloatPartValue = "FT-4"
+	FloatPartValueMW0   FloatPartValue = "MW-0"
+	FloatPartValueMW1   FloatPartValue = "MW-1"
+	FloatPartValueMW2   FloatPartValue = "MW-2"
+	FloatPartValueMW3   FloatPartValue = "MW-3"
+	FloatPartValueMW4   FloatPartValue = "MW-4"
+	FloatPartValueWW0   FloatPartValue = "WW-0"
+	FloatPartValueWW1   FloatPartValue = "WW-1"
+	FloatPartValueWW2   FloatPartValue = "WW-2"
+	FloatPartValueWW3   FloatPartValue = "WW-3"
+	FloatPartValueWW4   FloatPartValue = "WW-4"
+)
+
 // Defines values for MarketplaceAssetLocation.
 const (
 	MarketplaceAssetLocationAssetLocationInGame     MarketplaceAssetLocation = "AssetLocationInGame"
 	MarketplaceAssetLocationAssetLocationInMarket   MarketplaceAssetLocation = "AssetLocationInMarket"
 	MarketplaceAssetLocationAssetLocationInTransfer MarketplaceAssetLocation = "AssetLocationInTransfer"
-)
-
-// Defines values for MarketplaceCreateTargetRequestAttrsFloatPartValue.
-const (
-	MarketplaceCreateTargetRequestAttrsFloatPartValueBS0   MarketplaceCreateTargetRequestAttrsFloatPartValue = "BS-0"
-	MarketplaceCreateTargetRequestAttrsFloatPartValueBS1   MarketplaceCreateTargetRequestAttrsFloatPartValue = "BS-1"
-	MarketplaceCreateTargetRequestAttrsFloatPartValueBS2   MarketplaceCreateTargetRequestAttrsFloatPartValue = "BS-2"
-	MarketplaceCreateTargetRequestAttrsFloatPartValueBS3   MarketplaceCreateTargetRequestAttrsFloatPartValue = "BS-3"
-	MarketplaceCreateTargetRequestAttrsFloatPartValueBS4   MarketplaceCreateTargetRequestAttrsFloatPartValue = "BS-4"
-	MarketplaceCreateTargetRequestAttrsFloatPartValueEmpty MarketplaceCreateTargetRequestAttrsFloatPartValue = ""
-	MarketplaceCreateTargetRequestAttrsFloatPartValueFN0   MarketplaceCreateTargetRequestAttrsFloatPartValue = "FN-0"
-	MarketplaceCreateTargetRequestAttrsFloatPartValueFN1   MarketplaceCreateTargetRequestAttrsFloatPartValue = "FN-1"
-	MarketplaceCreateTargetRequestAttrsFloatPartValueFN2   MarketplaceCreateTargetRequestAttrsFloatPartValue = "FN-2"
-	MarketplaceCreateTargetRequestAttrsFloatPartValueFN3   MarketplaceCreateTargetRequestAttrsFloatPartValue = "FN-3"
-	MarketplaceCreateTargetRequestAttrsFloatPartValueFN4   MarketplaceCreateTargetRequestAttrsFloatPartValue = "FN-4"
-	MarketplaceCreateTargetRequestAttrsFloatPartValueFN5   MarketplaceCreateTargetRequestAttrsFloatPartValue = "FN-5"
-	MarketplaceCreateTargetRequestAttrsFloatPartValueFN6   MarketplaceCreateTargetRequestAttrsFloatPartValue = "FN-6"
-	MarketplaceCreateTargetRequestAttrsFloatPartValueFT0   MarketplaceCreateTargetRequestAttrsFloatPartValue = "FT-0"
-	MarketplaceCreateTargetRequestAttrsFloatPartValueFT1   MarketplaceCreateTargetRequestAttrsFloatPartValue = "FT-1"
-	MarketplaceCreateTargetRequestAttrsFloatPartValueFT2   MarketplaceCreateTargetRequestAttrsFloatPartValue = "FT-2"
-	MarketplaceCreateTargetRequestAttrsFloatPartValueFT3   MarketplaceCreateTargetRequestAttrsFloatPartValue = "FT-3"
-	MarketplaceCreateTargetRequestAttrsFloatPartValueFT4   MarketplaceCreateTargetRequestAttrsFloatPartValue = "FT-4"
-	MarketplaceCreateTargetRequestAttrsFloatPartValueMW0   MarketplaceCreateTargetRequestAttrsFloatPartValue = "MW-0"
-	MarketplaceCreateTargetRequestAttrsFloatPartValueMW1   MarketplaceCreateTargetRequestAttrsFloatPartValue = "MW-1"
-	MarketplaceCreateTargetRequestAttrsFloatPartValueMW2   MarketplaceCreateTargetRequestAttrsFloatPartValue = "MW-2"
-	MarketplaceCreateTargetRequestAttrsFloatPartValueMW3   MarketplaceCreateTargetRequestAttrsFloatPartValue = "MW-3"
-	MarketplaceCreateTargetRequestAttrsFloatPartValueMW4   MarketplaceCreateTargetRequestAttrsFloatPartValue = "MW-4"
-	MarketplaceCreateTargetRequestAttrsFloatPartValueWW0   MarketplaceCreateTargetRequestAttrsFloatPartValue = "WW-0"
-	MarketplaceCreateTargetRequestAttrsFloatPartValueWW1   MarketplaceCreateTargetRequestAttrsFloatPartValue = "WW-1"
-	MarketplaceCreateTargetRequestAttrsFloatPartValueWW2   MarketplaceCreateTargetRequestAttrsFloatPartValue = "WW-2"
-	MarketplaceCreateTargetRequestAttrsFloatPartValueWW3   MarketplaceCreateTargetRequestAttrsFloatPartValue = "WW-3"
-	MarketplaceCreateTargetRequestAttrsFloatPartValueWW4   MarketplaceCreateTargetRequestAttrsFloatPartValue = "WW-4"
-)
-
-// Defines values for MarketplaceCreateTargetRequestAttrsPhase.
-const (
-	MarketplaceCreateTargetRequestAttrsPhaseBlackPearl MarketplaceCreateTargetRequestAttrsPhase = "black-pearl"
-	MarketplaceCreateTargetRequestAttrsPhaseEmerald    MarketplaceCreateTargetRequestAttrsPhase = "emerald"
-	MarketplaceCreateTargetRequestAttrsPhaseEmpty      MarketplaceCreateTargetRequestAttrsPhase = ""
-	MarketplaceCreateTargetRequestAttrsPhasePhase1     MarketplaceCreateTargetRequestAttrsPhase = "phase-1"
-	MarketplaceCreateTargetRequestAttrsPhasePhase2     MarketplaceCreateTargetRequestAttrsPhase = "phase-2"
-	MarketplaceCreateTargetRequestAttrsPhasePhase3     MarketplaceCreateTargetRequestAttrsPhase = "phase-3"
-	MarketplaceCreateTargetRequestAttrsPhasePhase4     MarketplaceCreateTargetRequestAttrsPhase = "phase-4"
-	MarketplaceCreateTargetRequestAttrsPhaseRuby       MarketplaceCreateTargetRequestAttrsPhase = "ruby"
-	MarketplaceCreateTargetRequestAttrsPhaseSapphire   MarketplaceCreateTargetRequestAttrsPhase = "sapphire"
 )
 
 // Defines values for MarketplaceErrorCodes.
@@ -319,6 +282,19 @@ const (
 	MarketplaceTransferStatusTransferStatusSuccess        MarketplaceTransferStatus = "TransferStatusSuccess"
 )
 
+// Defines values for Phase.
+const (
+	PhaseBlackPearl Phase = "black-pearl"
+	PhaseEmerald    Phase = "emerald"
+	PhaseEmpty      Phase = ""
+	PhasePhase1     Phase = "phase-1"
+	PhasePhase2     Phase = "phase-2"
+	PhasePhase3     Phase = "phase-3"
+	PhasePhase4     Phase = "phase-4"
+	PhaseRuby       Phase = "ruby"
+	PhaseSapphire   Phase = "sapphire"
+)
+
 // Defines values for RepresentationFeatName.
 const (
 	RepresentationFeatNameP2P               RepresentationFeatName = "P2P"
@@ -412,6 +388,9 @@ type DotDmOffersFailReason struct {
 	Code string `json:"code"`
 }
 
+// GameID defines model for GameID.
+type GameID string
+
 // GetLastSalesResponseSale defines model for GetLastSalesResponseSale.
 type GetLastSalesResponseSale struct {
 	// Date unix timestamp
@@ -501,7 +480,7 @@ type Dota2Gem struct {
 // EntityAsset defines model for entity.Asset.
 type EntityAsset struct {
 	ClassId string `json:"classId"`
-	GameId  string `json:"gameId"`
+	GameId  GameID `json:"gameId"`
 	Id      string `json:"id"`
 }
 
@@ -527,48 +506,54 @@ type EntityExtra struct {
 	Exterior        *EntityExtraExterior `json:"exterior,omitempty"`
 
 	// FloatPartValue https://dmarket.com/blog/dmarket-api-for-automated-trading/#float-values
-	FloatPartValue    *EntityExtraFloatPartValue `json:"floatPartValue"`
-	FloatValue        *float32                   `json:"floatValue,omitempty"`
-	GameId            string                     `json:"gameId"`
-	Gems              *[]Dota2Gem                `json:"gems,omitempty"`
-	Grade             *string                    `json:"grade,omitempty"`
-	GroupId           *string                    `json:"groupId,omitempty"`
-	Growth            *float32                   `json:"growth,omitempty"`
-	Hero              *string                    `json:"hero,omitempty"`
-	InspectInGame     *string                    `json:"inspectInGame,omitempty"`
-	IsNew             bool                       `json:"isNew"`
-	ItemType          *string                    `json:"itemType,omitempty"`
-	LinkId            *string                    `json:"linkId,omitempty"`
-	Name              string                     `json:"name"`
-	NameColor         *string                    `json:"nameColor,omitempty"`
-	OfferId           *string                    `json:"offerId,omitempty"`
-	PaintSeed         *int                       `json:"paintSeed,omitempty"`
-	Quality           *string                    `json:"quality,omitempty"`
-	Rarity            *string                    `json:"rarity,omitempty"`
-	SerialNumber      *int                       `json:"serialNumber,omitempty"`
-	Stickers          *[]CsgoSticker             `json:"stickers,omitempty"`
-	Subscribers       *int                       `json:"subscribers,omitempty"`
-	TagName           *string                    `json:"tagName,omitempty"`
-	Tradable          bool                       `json:"tradable"`
-	TradeLock         *int                       `json:"tradeLock,omitempty"`
-	TradeLockDuration int                        `json:"tradeLockDuration"`
-	Type              *string                    `json:"type,omitempty"`
-	Videos            *int                       `json:"videos,omitempty"`
-	ViewAtSteam       *string                    `json:"viewAtSteam,omitempty"`
-	Withdrawable      *bool                      `json:"withdrawable,omitempty"`
+	FloatPartValue *FloatPartValue `json:"floatPartValue"`
+	FloatValue     *float32        `json:"floatValue,omitempty"`
+	GameId         GameID          `json:"gameId"`
+	Gems           *[]Dota2Gem     `json:"gems,omitempty"`
+	Grade          *string         `json:"grade,omitempty"`
+	GroupId        *string         `json:"groupId,omitempty"`
+	Growth         *float32        `json:"growth,omitempty"`
+	Hero           *string         `json:"hero,omitempty"`
+	InspectInGame  *string         `json:"inspectInGame,omitempty"`
+	IsNew          bool            `json:"isNew"`
+	ItemType       *string         `json:"itemType,omitempty"`
+	LinkId         *string         `json:"linkId,omitempty"`
+	Name           string          `json:"name"`
+	NameColor      *string         `json:"nameColor,omitempty"`
+	OfferId        *string         `json:"offerId,omitempty"`
+	PaintSeed      *int            `json:"paintSeed,omitempty"`
+
+	// Phase https://dmarket.com/blog/dmarket-api-for-automated-trading/#phase-values
+	Phase             *Phase         `json:"phase"`
+	Quality           *string        `json:"quality,omitempty"`
+	Rarity            *string        `json:"rarity,omitempty"`
+	SerialNumber      *int           `json:"serialNumber,omitempty"`
+	Stickers          *[]CsgoSticker `json:"stickers,omitempty"`
+	Subscribers       *int           `json:"subscribers,omitempty"`
+	TagName           *string        `json:"tagName,omitempty"`
+	Tradable          bool           `json:"tradable"`
+	TradeLock         *int           `json:"tradeLock,omitempty"`
+	TradeLockDuration int            `json:"tradeLockDuration"`
+	Type              *string        `json:"type,omitempty"`
+	Videos            *int           `json:"videos,omitempty"`
+	ViewAtSteam       *string        `json:"viewAtSteam,omitempty"`
+	Withdrawable      *bool          `json:"withdrawable,omitempty"`
 }
 
 // EntityExtraExterior defines model for EntityExtra.Exterior.
 type EntityExtraExterior string
-
-// EntityExtraFloatPartValue https://dmarket.com/blog/dmarket-api-for-automated-trading/#float-values
-type EntityExtraFloatPartValue string
 
 // EntityGetItemsResponse defines model for entity.GetItemsResponse.
 type EntityGetItemsResponse struct {
 	Cursor  *string      `json:"cursor,omitempty"`
 	Objects []EntityItem `json:"objects"`
 	Total   EntityTotal  `json:"total"`
+}
+
+// EntityGetOrderBookResponse defines model for entity.GetOrderBookResponse.
+type EntityGetOrderBookResponse struct {
+	UpdatedAt time.Time          `json:"UpdatedAt"`
+	Orders    []EntityOrderEntry `json:"orders"`
 }
 
 // EntityItem defines model for entity.Item.
@@ -580,7 +565,7 @@ type EntityItem struct {
 	Discount           int64                  `json:"discount"`
 	Extra              EntityExtra            `json:"extra"`
 	ExtraDoc           *EntityItemExtraDoc    `json:"extraDoc,omitempty"`
-	GameId             string                 `json:"gameId"`
+	GameId             GameID                 `json:"gameId"`
 	GameType           EntityItemGameType     `json:"gameType"`
 	Image              string                 `json:"image"`
 	InMarket           bool                   `json:"inMarket"`
@@ -691,6 +676,26 @@ type EntityOfferPrice struct {
 // EntityOfferPriceType defines model for EntityOfferPrice.Type.
 type EntityOfferPriceType string
 
+// EntityOrderBookAttribute defines model for entity.OrderBookAttribute.
+type EntityOrderBookAttribute struct {
+	// FloatPartValue https://dmarket.com/blog/dmarket-api-for-automated-trading/#float-values
+	FloatPartValue *FloatPartValue `json:"floatPartValue"`
+	IsAdvanced     *string         `json:"isAdvanced,omitempty"`
+	PaintSeed      *string         `json:"paintSeed,omitempty"`
+
+	// PhaseTitle https://dmarket.com/blog/dmarket-api-for-automated-trading/#phase-values
+	PhaseTitle *Phase `json:"phaseTitle"`
+}
+
+// EntityOrderEntry defines model for entity.OrderEntry.
+type EntityOrderEntry struct {
+	AdvancedAmount *string                     `json:"advancedAmount,omitempty"`
+	Amount         string                      `json:"amount"`
+	Attributes     *[]EntityOrderBookAttribute `json:"attributes,omitempty"`
+	Liquidity      string                      `json:"liquidity"`
+	Price          string                      `json:"price"`
+}
+
 // EntityOwnerDetails defines model for entity.OwnerDetails.
 type EntityOwnerDetails struct {
 	Avatar string `json:"avatar"`
@@ -730,6 +735,9 @@ type EntityWithdrawResponse struct {
 	TransferId string `json:"transferId"`
 }
 
+// FloatPartValue https://dmarket.com/blog/dmarket-api-for-automated-trading/#float-values
+type FloatPartValue string
+
 // MarketplaceAsset defines model for marketplaceAsset.
 type MarketplaceAsset struct {
 	// AssetID Unique asset identifier.
@@ -742,10 +750,8 @@ type MarketplaceAsset struct {
 	ClassID *string `json:"ClassID,omitempty"`
 
 	// Depositable Determines if asset can be transferred from game to market.
-	Depositable *bool `json:"Depositable,omitempty"`
-
-	// GameID Game identifier asset belongs to.
-	GameID *string `json:"GameID,omitempty"`
+	Depositable *bool   `json:"Depositable,omitempty"`
+	GameID      *GameID `json:"GameID,omitempty"`
 
 	// GameType  - GameTypeBlockchain: Blockchain-based game.
 	//  - GameTypeSteam: Steam-based game.
@@ -846,25 +852,19 @@ type MarketplaceCreateTargetRequest struct {
 	Amount *string `json:"Amount,omitempty"`
 	Attrs  *struct {
 		// FloatPartValue https://dmarket.com/blog/dmarket-api-for-automated-trading/#float-values
-		FloatPartValue *MarketplaceCreateTargetRequestAttrsFloatPartValue `json:"floatPartValue"`
+		FloatPartValue *FloatPartValue `json:"floatPartValue"`
 
 		// PaintSeed https://dmarket.com/blog/dmarket-api-for-automated-trading/#pattern-values
 		PaintSeed *int `json:"paintSeed"`
 
 		// Phase https://dmarket.com/blog/dmarket-api-for-automated-trading/#phase-values
-		Phase *MarketplaceCreateTargetRequestAttrsPhase `json:"phase"`
+		Phase *Phase `json:"phase"`
 	} `json:"Attrs,omitempty"`
 	Price *MarketplaceMoney `json:"Price,omitempty"`
 
 	// Title Title of same assets in one single target entity.
 	Title *string `json:"Title,omitempty"`
 }
-
-// MarketplaceCreateTargetRequestAttrsFloatPartValue https://dmarket.com/blog/dmarket-api-for-automated-trading/#float-values
-type MarketplaceCreateTargetRequestAttrsFloatPartValue string
-
-// MarketplaceCreateTargetRequestAttrsPhase https://dmarket.com/blog/dmarket-api-for-automated-trading/#phase-values
-type MarketplaceCreateTargetRequestAttrsPhase string
 
 // MarketplaceCreateTargetResponse defines model for marketplaceCreateTargetResponse.
 type MarketplaceCreateTargetResponse struct {
@@ -880,8 +880,7 @@ type MarketplaceCreateTargetResponse struct {
 
 // MarketplaceCreateTargetsRequest defines model for marketplaceCreateTargetsRequest.
 type MarketplaceCreateTargetsRequest struct {
-	// GameID GameID of same assets in one single target entity.
-	GameID *string `json:"GameID,omitempty"`
+	GameID *GameID `json:"GameID,omitempty"`
 
 	// Targets List of targets to create.
 	Targets *[]MarketplaceCreateTargetRequest `json:"Targets,omitempty"`
@@ -1127,9 +1126,7 @@ type MarketplaceTarget struct {
 	// Amount Amount of same assets in one single target entity.
 	Amount     *string                      `json:"Amount,omitempty"`
 	Attributes *[]MarketplaceAssetAttribute `json:"Attributes,omitempty"`
-
-	// GameID Game identifier asset belongs to.
-	GameID *string `json:"GameID,omitempty"`
+	GameID     *GameID                      `json:"GameID,omitempty"`
 
 	// GameType  - GameTypeBlockchain: Blockchain-based game.
 	//  - GameTypeSteam: Steam-based game.
@@ -1165,6 +1162,9 @@ type MarketplaceUserInventorySyncRequest struct {
 
 // MarketplaceUserInventorySyncResponse defines model for marketplaceUserInventorySyncResponse.
 type MarketplaceUserInventorySyncResponse = map[string]interface{}
+
+// Phase https://dmarket.com/blog/dmarket-api-for-automated-trading/#phase-values
+type Phase string
 
 // ProtobufAny `Any` contains an arbitrary serialized protocol buffer message along with a
 // URL that describes the type of the serialized message.
@@ -1295,7 +1295,7 @@ type RepresentationFeatName string
 
 // RepresentationLinkedGame defines model for representation.LinkedGame.
 type RepresentationLinkedGame struct {
-	GameId     string `json:"gameId"`
+	GameId     GameID `json:"gameId"`
 	GameUserId string `json:"gameUserId"`
 	Username   string `json:"username"`
 }
@@ -1398,7 +1398,7 @@ type TradeGetLastSalesResponse struct {
 // GetCustomizedItemsParams defines parameters for GetCustomizedItems.
 type GetCustomizedItemsParams struct {
 	// GameId enums: CS:GO - a8db, Team Fortress 2 - tf2, Dota 2 - 9a92, Rust - rust
-	GameId string `form:"gameId" json:"gameId"`
+	GameId GameID `form:"gameId" json:"gameId"`
 
 	// OfferType enums: "dmarket", "p2p"
 	OfferType *string `form:"offerType,omitempty" json:"offerType,omitempty"`
@@ -1413,7 +1413,7 @@ type GetCustomizedItemsParams struct {
 // GetMarketItemsParams defines parameters for GetMarketItems.
 type GetMarketItemsParams struct {
 	// GameId gameId
-	GameId string `form:"gameId" json:"gameId"`
+	GameId GameID `form:"gameId" json:"gameId"`
 
 	// Title title
 	Title *string `form:"title,omitempty" json:"title,omitempty"`
@@ -1464,7 +1464,7 @@ type GetOffersByTitleParams struct {
 // GetUserItemsParams defines parameters for GetUserItems.
 type GetUserItemsParams struct {
 	// GameId gameId
-	GameId string `form:"gameId" json:"gameId"`
+	GameId GameID `form:"gameId" json:"gameId"`
 
 	// Title title
 	Title *string `form:"title,omitempty" json:"title,omitempty"`
@@ -1503,7 +1503,7 @@ type GetUserItemsParams struct {
 // GetUserInventoryParams defines parameters for GetUserInventory.
 type GetUserInventoryParams struct {
 	// GameID Game identifier on market.
-	GameID *string `form:"GameID,omitempty" json:"GameID,omitempty"`
+	GameID *GameID `form:"GameID,omitempty" json:"GameID,omitempty"`
 
 	// BasicFiltersTitle Filter assets in inventory by asset's title.
 	BasicFiltersTitle *string `form:"BasicFilters.Title,omitempty" json:"BasicFilters.Title,omitempty"`
@@ -1549,7 +1549,7 @@ type GetUserInventoryParamsPresentation string
 // GetUserOffersParams defines parameters for GetUserOffers.
 type GetUserOffersParams struct {
 	// GameID Game identifier on market.
-	GameID *string `form:"GameID,omitempty" json:"GameID,omitempty"`
+	GameID *GameID `form:"GameID,omitempty" json:"GameID,omitempty"`
 
 	// Status On sale offer current status.
 	Status *GetUserOffersParamsStatus `form:"Status,omitempty" json:"Status,omitempty"`
@@ -1611,7 +1611,7 @@ type GetUserClosedOffersParamsStatus string
 // GetUserTargetsParams defines parameters for GetUserTargets.
 type GetUserTargetsParams struct {
 	// GameID Game identifier on market.
-	GameID *string `form:"GameID,omitempty" json:"GameID,omitempty"`
+	GameID *GameID `form:"GameID,omitempty" json:"GameID,omitempty"`
 
 	// BasicFiltersPriceFrom Price range filtering.
 	BasicFiltersPriceFrom *float32 `form:"BasicFilters.PriceFrom,omitempty" json:"BasicFilters.PriceFrom,omitempty"`
@@ -1678,9 +1678,18 @@ type GetUserClosedTargetsParamsOrderDir string
 // GetUserClosedTargetsParamsStatus defines parameters for GetUserClosedTargets.
 type GetUserClosedTargetsParamsStatus string
 
+// GetOrderBookParams defines parameters for GetOrderBook.
+type GetOrderBookParams struct {
+	GameId         GameID            `form:"gameId" json:"gameId"`
+	Title          string            `form:"title" json:"title"`
+	PaintSeed      *[]string         `form:"paintSeed[],omitempty" json:"paintSeed[],omitempty"`
+	FloatPartValue *[]FloatPartValue `form:"floatPartValue[],omitempty" json:"floatPartValue[],omitempty"`
+	Phase          *[]Phase          `form:"phase[],omitempty" json:"phase[],omitempty"`
+}
+
 // AggregatorGetLastSalesParams defines parameters for AggregatorGetLastSales.
 type AggregatorGetLastSalesParams struct {
-	GameId string `form:"gameId" json:"gameId"`
+	GameId GameID `form:"gameId" json:"gameId"`
 	Title  string `form:"title" json:"title"`
 
 	// Filters filters is a list of filters. For example: exterior[]=factory new,phase[]=phase-1,phase[]=phase-2,float[]=2,float[]=133.
@@ -1887,6 +1896,9 @@ type ClientInterface interface {
 	DeleteTargetsWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	DeleteTargets(ctx context.Context, body DeleteTargetsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetOrderBook request
+	GetOrderBook(ctx context.Context, params *GetOrderBookParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// AggregatorGetLastSales request
 	AggregatorGetLastSales(ctx context.Context, params *AggregatorGetLastSalesParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -2278,6 +2290,18 @@ func (c *Client) DeleteTargetsWithBody(ctx context.Context, contentType string, 
 
 func (c *Client) DeleteTargets(ctx context.Context, body DeleteTargetsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewDeleteTargetsRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetOrderBook(ctx context.Context, params *GetOrderBookParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetOrderBookRequest(c.Server, params)
 	if err != nil {
 		return nil, err
 	}
@@ -4414,6 +4438,111 @@ func NewDeleteTargetsRequestWithBody(server string, contentType string, body io.
 	return req, nil
 }
 
+// NewGetOrderBookRequest generates requests for GetOrderBook
+func NewGetOrderBookRequest(server string, params *GetOrderBookParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/order-book/v1/market-depth")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "gameId", runtime.ParamLocationQuery, params.GameId); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "title", runtime.ParamLocationQuery, params.Title); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+		if params.PaintSeed != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "paintSeed[]", runtime.ParamLocationQuery, *params.PaintSeed); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.FloatPartValue != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "floatPartValue[]", runtime.ParamLocationQuery, *params.FloatPartValue); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Phase != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "phase[]", runtime.ParamLocationQuery, *params.Phase); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewAggregatorGetLastSalesRequest generates requests for AggregatorGetLastSales
 func NewAggregatorGetLastSalesRequest(server string, params *AggregatorGetLastSalesParams) (*http.Request, error) {
 	var err error
@@ -4662,6 +4791,9 @@ type ClientWithResponsesInterface interface {
 	DeleteTargetsWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteTargetsResponse, error)
 
 	DeleteTargetsWithResponse(ctx context.Context, body DeleteTargetsJSONRequestBody, reqEditors ...RequestEditorFn) (*DeleteTargetsResponse, error)
+
+	// GetOrderBookWithResponse request
+	GetOrderBookWithResponse(ctx context.Context, params *GetOrderBookParams, reqEditors ...RequestEditorFn) (*GetOrderBookResponse, error)
 
 	// AggregatorGetLastSalesWithResponse request
 	AggregatorGetLastSalesWithResponse(ctx context.Context, params *AggregatorGetLastSalesParams, reqEditors ...RequestEditorFn) (*AggregatorGetLastSalesResponse, error)
@@ -5213,6 +5345,32 @@ func (r DeleteTargetsResponse) StatusCode() int {
 	return 0
 }
 
+type GetOrderBookResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *EntityGetOrderBookResponse
+	JSON401      *RepresentationUserAccountResponse
+	JSON404      *ApiErrorRepresentation
+	JSON500      *ApiErrorRepresentation
+	JSONDefault  *RepresentationUserAccountResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetOrderBookResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetOrderBookResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type AggregatorGetLastSalesResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -5521,6 +5679,15 @@ func (c *ClientWithResponses) DeleteTargetsWithResponse(ctx context.Context, bod
 		return nil, err
 	}
 	return ParseDeleteTargetsResponse(rsp)
+}
+
+// GetOrderBookWithResponse request returning *GetOrderBookResponse
+func (c *ClientWithResponses) GetOrderBookWithResponse(ctx context.Context, params *GetOrderBookParams, reqEditors ...RequestEditorFn) (*GetOrderBookResponse, error) {
+	rsp, err := c.GetOrderBook(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetOrderBookResponse(rsp)
 }
 
 // AggregatorGetLastSalesWithResponse request returning *AggregatorGetLastSalesResponse
@@ -6400,6 +6567,60 @@ func ParseDeleteTargetsResponse(rsp *http.Response) (*DeleteTargetsResponse, err
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest RuntimeError
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetOrderBookResponse parses an HTTP response from a GetOrderBookWithResponse call
+func ParseGetOrderBookResponse(rsp *http.Response) (*GetOrderBookResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetOrderBookResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest EntityGetOrderBookResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest RepresentationUserAccountResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ApiErrorRepresentation
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ApiErrorRepresentation
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON500 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest RepresentationUserAccountResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}

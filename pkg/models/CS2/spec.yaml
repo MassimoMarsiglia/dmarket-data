@@ -1,0 +1,283 @@
+components:
+  schemas:
+    Item:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+
+    Weapon:
+      type: object
+      required:
+        - id
+        - weapon_id
+        - name
+      properties:
+        id:
+          type: string
+        weapon_id:
+          type: integer
+        name:
+          type: string
+
+    Category:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+
+    Pattern:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+
+    Rarity:
+      type: object
+      required:
+        - id
+        - name
+        - color
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        color:
+          type: string
+
+    Wear:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+
+    Collection:
+      type: object
+      required:
+        - id
+        - name
+        - image
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        image:
+          type: string
+
+    CrateRef:
+      type: object
+      required:
+        - id
+        - name
+        - image
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        image:
+          type: string
+
+    Skin:
+      type: object
+      required:
+        - id
+        - name
+        - description
+        - weapon
+        - category
+        - pattern
+        - min_float
+        - max_float
+        - rarity
+        - stattrak
+        - souvenir
+        - wears
+        - collections
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        weapon:
+          $ref: "#/components/schemas/Weapon"
+        category:
+          $ref: "#/components/schemas/Category"
+        pattern:
+          $ref: "#/components/schemas/Pattern"
+        min_float:
+          type: number
+        max_float:
+          type: number
+        rarity:
+          $ref: "#/components/schemas/Rarity"
+        stattrak:
+          type: boolean
+        souvenir:
+          type: boolean
+        paint_index:
+          type: string
+        wears:
+          type: array
+          items:
+            $ref: "#/components/schemas/Wear"
+        collections:
+          type: array
+          items:
+            $ref: "#/components/schemas/Collection"
+        crates:
+          type: array
+          items:
+            $ref: "#/components/schemas/CrateRef"
+        team:
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+        legacy_model:
+          type: boolean
+        image:
+          type: string
+
+    SkinNotGrouped:
+      allOf:
+        - $ref: "#/components/schemas/Skin"
+        - type: object
+          required:
+            - skin_id
+            - wear
+            - market_hash_name
+            - style
+          properties:
+            skin_id:
+              type: string
+            wear:
+              $ref: "#/components/schemas/Wear"
+            market_hash_name:
+              type: string
+            style:
+              type: object
+              properties:
+                id:
+                  type: integer
+                name:
+                  type: string
+                url:
+                  type: string
+
+    Sticker:
+      type: object
+      required:
+        - id
+        - name
+        - description
+        - market_hash_name
+        - image
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        rarity:
+          $ref: "#/components/schemas/Rarity"
+        market_hash_name:
+          type: string
+        image:
+          type: string
+
+    Keychain:
+      type: object
+      required:
+        - id
+        - name
+        - description
+        - rarity
+        - image
+        - market_hash_name
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        rarity:
+          $ref: "#/components/schemas/Rarity"
+        market_hash_name:
+          type: string
+        image:
+          type: string
+
+    Crate:
+      type: object
+      required:
+        - id
+        - name
+        - type
+        - first_sale_date
+        - market_hash_name
+        - image
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+        first_sale_date:
+          type: string
+        market_hash_name:
+          type: string
+        image:
+          type: string
+
+    Agent:
+      type: object
+      required:
+        - id
+        - name
+        - description
+        - rarity
+        - market_hash_name
+        - image
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        rarity:
+          $ref: "#/components/schemas/Rarity"
+        market_hash_name:
+          type: string
+        image:
+          type: string

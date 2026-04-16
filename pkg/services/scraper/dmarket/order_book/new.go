@@ -1,0 +1,39 @@
+package order_book
+
+import (
+	"sync"
+	"time"
+
+	"github.com/MassimoMarsiglia/dmarket-bot/pkg/client"
+	dmarket_utils "github.com/MassimoMarsiglia/dmarket-bot/pkg/utils/dmarket"
+)
+
+var instantiated *Service
+var once sync.Once
+
+func New(cfg ServiceCfg) (*Service, error) {
+	clients, err := dmarket_utils.LoadDmarketAccounts(cfg.Logger, cfg.AccDir, cfg.DmarketCfgs)
+	if err != nil {
+		return nil, err
+	}
+	queue, err := dmarket_utils.LoadDmarketOrderBookQueue(cfg.Logger, cfg.ItemDir)
+	if err != nil {
+		return nil, err
+	}
+	svc := &Service{
+		nc:      cfg.Conn,
+		clients: clients,
+		context: cfg.Context,
+		ticker:  time.NewTicker(cfg.Delay),
+		filters: []client.FilterFunc[any]{},
+		logger:  cfg.Logger,
+		queue:   queue,
+	}
+
+	go svc.init()
+
+	once.Do(func() {
+		instantiated = &Service{}
+	})
+	return svc, nil
+}
