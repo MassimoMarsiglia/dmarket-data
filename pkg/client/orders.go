@@ -53,6 +53,7 @@ func (e EntityGetOrderBookResponse) GetOrders(marketHashName string, filters ...
 		return nil, fmt.Errorf("%w in order book response", ErrMissingOrders)
 	}
 
+Transform:
 	for _, order := range e.Orders {
 		var attributes []EntityOrderBookAttribute
 		if order.Attributes != nil && len(*order.Attributes) != 0 {
@@ -107,7 +108,7 @@ func (e EntityGetOrderBookResponse) GetOrders(marketHashName string, filters ...
 			}
 			price := int(p64)
 
-			orders = append(orders, models.BuyOrder{
+			order := models.BuyOrder{
 				MarketHashName: marketHashName,
 				FloatPartValue: floatPartValue,
 				Phase:          phase,
@@ -115,7 +116,19 @@ func (e EntityGetOrderBookResponse) GetOrders(marketHashName string, filters ...
 				Price:          price,
 				Depth:          depth,
 				UpdatedAt:      time.Now(),
-			})
+			}
+
+			for i := range filters {
+				filter := filters[i]
+				ok, err := filter(order)
+				if err != nil {
+					return nil, err
+				}
+				if !ok {
+					continue Transform
+				}
+			}
+			orders = append(orders, order)
 		}
 	}
 	return orders, nil
