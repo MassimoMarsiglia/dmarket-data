@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/MassimoMarsiglia/dmarket-bot/pkg/client"
+	"github.com/MassimoMarsiglia/dmarket-bot/pkg/models"
 	dmarket_utils "github.com/MassimoMarsiglia/dmarket-bot/pkg/utils/dmarket"
 )
 
@@ -25,7 +26,7 @@ func New(cfg ServiceCfg) (*Service, error) {
 		clients: clients,
 		context: cfg.Context,
 		ticker:  time.NewTicker(cfg.Delay),
-		filters: []client.FilterFunc[any]{},
+		filters: []client.FilterFunc[models.BuyOrder]{client.OrderDepthFilter()},
 		logger:  cfg.Logger,
 		queue:   queue,
 	}

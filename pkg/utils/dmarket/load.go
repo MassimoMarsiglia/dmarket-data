@@ -91,7 +91,7 @@ func LoadDmarketOrderBookQueue(logger *zap.Logger, dir string) (*deque.Deque[*cl
 	for i := range stickers {
 		sticker := stickers[i]
 		reqs.PushBack(&client.GetOrderBookParams{
-			Title:  sticker.MarketHashName,
+			Title:  sticker.Name,
 			GameId: client.GameIDA8db,
 		})
 	}

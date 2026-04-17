@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/MassimoMarsiglia/dmarket-bot/pkg/client"
+	"github.com/MassimoMarsiglia/dmarket-bot/pkg/models"
 	"github.com/gammazero/deque"
 	"github.com/nats-io/nats.go"
 	"go.uber.org/zap"
@@ -31,7 +32,7 @@ type (
 	Service struct {
 		nc      *nats.Conn
 		logger  *zap.Logger
-		filters []client.FilterFunc[any]
+		filters []client.FilterFunc[models.BuyOrder]
 		context context.Context
 		clients *deque.Deque[*client.ClientWithResponses]
 		queue   *deque.Deque[*client.GetOrderBookParams]

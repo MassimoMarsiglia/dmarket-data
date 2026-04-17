@@ -19,7 +19,7 @@ func (s *Service) getNewListings(ctx context.Context, c *client.ClientWithRespon
 	resp, err := c.GetMarketItemsWithResponse(ctx, &client.GetMarketItemsParams{
 		GameId:   client.GameIDA8db,
 		Currency: "USD",
-		Limit:    utils.Ptr(50),
+		Limit:    utils.Ptr(20),
 		OrderBy:  utils.Ptr("updated"),
 		OrderDir: utils.Ptr("desc"),
 	})
@@ -39,41 +39,12 @@ func (s *Service) getNewListings(ctx context.Context, c *client.ClientWithRespon
 	}
 	items, err := resp.JSON200.Items(s.filters...)
 	if err != nil {
+		s.logger.Error(
+			"failed getting listings",
+			zap.Any("resp", resp.JSON200),
+			zap.Error(err),
+		)
 		return nil, err
 	}
 	return items, nil
 }
-
-// func (s *Service) getNewListings(ctx context.Context, c *client.ClientWithResponses) {
-// 	resp, err := c.GetMarketItemsWithResponse(ctx, &client.GetMarketItemsParams{
-// 		GameId:   client.GameIDA8db,
-// 		Currency: "USD",
-// 		Limit:    utils.Ptr(50),
-// 		OrderBy:  utils.Ptr("updated"),
-// 		OrderDir: utils.Ptr("desc"),
-// 	})
-// 	if err != nil {
-// 		s.logger.Error("Failed to fetch new listings...", zap.Error(err))
-// 		s.NotifyErr(err)
-// 		return
-// 	}
-// 	if resp.StatusCode() == 429 {
-// 		s.logger.Warn("rate limit surpassed")
-// 		s.NotifyErr(ErrRateLimitSurpassed)
-// 		return
-// 	}
-// 	if resp.StatusCode() != 200 {
-// 		return
-// 	}
-// 	items, err := resp.JSON200.Items(s.filters...)
-
-// 	for _, item := range items {
-
-// 		itemb, err := json.Marshal(item)
-// 		if err != nil {
-// 			s.NotifyErr(err)
-// 			return
-// 		}
-// 		s.nc.Publish(NATS_KEY, itemb)
-// 	}
-// }

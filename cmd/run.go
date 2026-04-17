@@ -96,7 +96,7 @@ var RunCmd = &cobra.Command{
 			if err != nil {
 				return err
 			}
-			logger.Debug("starting with:", zap.Duration("new_listing poll delay:", delay))
+			logger.Debug("starting with:", zap.Duration("order book poll delay:", delay))
 
 			orderBookModule, err := orderbook.New(
 				logger,

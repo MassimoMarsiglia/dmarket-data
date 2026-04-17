@@ -4,6 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
+	"sync"
+	"time"
 
 	"github.com/MassimoMarsiglia/dmarket-bot/pkg/models"
 	"github.com/MassimoMarsiglia/dmarket-bot/pkg/utils"
@@ -11,7 +13,40 @@ import (
 
 var ErrMissingOrders = errors.New("orders missing")
 
-func (e EntityGetOrderBookResponse) GetOrders(marketHashName string, filters ...FilterFunc[any]) ([]models.BuyOrder, error) {
+func OrderDepthFilter() FilterFunc[models.BuyOrder] {
+	mu := sync.Mutex{}
+	// market_hash_name, start_depth, order
+	seenOrders := make(map[string]map[int]models.BuyOrder)
+
+	return func(i models.BuyOrder) (bool, error) {
+		mu.Lock()
+		defer mu.Unlock()
+
+		orderBook, ok := seenOrders[i.MarketHashName]
+		if !ok {
+			orderBook = make(map[int]models.BuyOrder, 0)
+			orderBook[i.Depth] = i
+			seenOrders[i.MarketHashName] = orderBook
+			return true, nil
+		}
+
+		order, ok := orderBook[i.Depth]
+		if !ok {
+			orderBook[i.Depth] = i
+			return true, nil
+		}
+
+		if i.IsEqual(order) {
+			order.UpdatedAt = time.Now()
+			return false, nil
+		}
+
+		orderBook[i.Depth] = i
+		return true, nil
+	}
+}
+
+func (e EntityGetOrderBookResponse) GetOrders(marketHashName string, filters ...FilterFunc[models.BuyOrder]) ([]models.BuyOrder, error) {
 	orders := make([]models.BuyOrder, 0, len(e.Orders))
 
 	if e.Orders == nil {
@@ -31,7 +66,7 @@ func (e EntityGetOrderBookResponse) GetOrders(marketHashName string, filters ...
 				if *attr.FloatPartValue != "any" {
 					fpv, err := models.ParseFloatPartValue(string(*attr.FloatPartValue))
 					if err != nil {
-						return nil, err
+						err = nil
 					}
 					floatPartValue = &fpv
 				}
@@ -50,7 +85,8 @@ func (e EntityGetOrderBookResponse) GetOrders(marketHashName string, filters ...
 
 			var paintSeed *int
 			if attributes != nil && attr.PaintSeed != nil {
-				if *attr.PaintSeed != "any" {
+				ps := *attr.PaintSeed
+				if ps != "any" && ps != "all" && ps != "none" {
 					psi64, err := strconv.ParseInt(*attr.PaintSeed, 10, 16)
 					if err != nil {
 						return nil, err
@@ -58,6 +94,12 @@ func (e EntityGetOrderBookResponse) GetOrders(marketHashName string, filters ...
 					paintSeed = utils.Ptr(int(psi64))
 				}
 			}
+
+			d64, err := strconv.ParseInt(order.Liquidity, 10, 64)
+			if err != nil {
+				return nil, err
+			}
+			depth := int(d64)
 
 			p64, err := strconv.ParseInt(order.Price, 10, 64)
 			if err != nil {
@@ -71,6 +113,8 @@ func (e EntityGetOrderBookResponse) GetOrders(marketHashName string, filters ...
 				Phase:          phase,
 				PaintSeed:      paintSeed,
 				Price:          price,
+				Depth:          depth,
+				UpdatedAt:      time.Now(),
 			})
 		}
 	}

@@ -10,7 +10,7 @@ import (
 
 type FilterFunc[T any] func(T) (bool, error)
 
-func PriceIDFilter() func(models.Item) (bool, error) {
+func PriceIDFilter() FilterFunc[models.Item] {
 	mu := sync.Mutex{}
 	seenItems := make(map[string]int64)
 

@@ -32,6 +32,11 @@ func (s *Service) getOrderBook(ctx context.Context, c *client.ClientWithResponse
 	}
 	orders, err := resp.JSON200.GetOrders(params.Title, s.filters...)
 	if err != nil {
+		s.logger.Error(
+			"failed getting orders",
+			zap.Any("resp", resp.JSON200),
+			zap.Error(err),
+		)
 		return nil, err
 	}
 	return orders, nil

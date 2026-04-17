@@ -23,7 +23,11 @@ func (s *Service) init() error {
 			go func() {
 				resp, err := s.getOrderBook(s.context, cl, req)
 				if err != nil {
-					s.logger.Error("failed getting dmarket order book", zap.Error(err))
+					s.logger.Error(
+						"failed getting dmarket order book",
+						zap.Any("request", req),
+						zap.Error(err),
+					)
 					return
 				}
 
