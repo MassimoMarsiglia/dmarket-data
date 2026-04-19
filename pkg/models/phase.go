@@ -23,8 +23,39 @@ const (
 	Doppler_Sapphire                // sapphire
 )
 
-func ParsePhase(input string) (Phase, error) {
+func ParsePhase(market MarketType, input string) (Phase, error) {
+	switch market {
+	case UNKNOWN:
+		return utils.ParseIotas[Phase](input, _Phase_name, _Phase_index[:])
+	case DMARKET:
+		return utils.ParseIotas[Phase](input, _Phase_name, _Phase_index[:])
+	case BUFF:
+		return parsePhaseBuff(input), nil
+	}
 	return utils.ParseIotas[Phase](input, _Phase_name, _Phase_index[:])
+}
+
+func parsePhaseBuff(input string) Phase {
+	switch input {
+	case "P1":
+		return Doppler_Phase1
+	case "P2":
+		return Doppler_Phase2
+	case "P3":
+		return Doppler_Phase3
+	case "P4":
+		return Doppler_Phase4
+	case "Sapphire":
+		return Doppler_Sapphire
+	case "Ruby":
+		return Doppler_Ruby
+	case "Emerald":
+		return Doppler_Emerald
+	case "Black_Pearl":
+		return Doppler_BlackPearl
+	default:
+		return Doppler_Unknown
+	}
 }
 
 func (p Phase) MarshalJSON() ([]byte, error) {
@@ -38,7 +69,7 @@ func (f *Phase) UnmarshalJSON(data []byte) error {
 	}
 
 	var err error
-	*f, err = ParsePhase(s) // your mapping logic
+	*f, err = ParsePhase(UNKNOWN, s) // your mapping logic
 	if err != nil {
 		return err
 	}

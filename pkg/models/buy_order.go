@@ -3,6 +3,7 @@ package models
 import "time"
 
 type BuyOrder struct {
+	Market         MarketType      `json:"market"`
 	MarketHashName string          `json:"market_hash_name"`
 	Depth          int             `json:"depth"`
 	FloatPartValue *FloatPartValue `json:"float_part_value"`

@@ -1,4 +1,4 @@
-package client
+package dmarket
 
 import (
 	"errors"
@@ -65,7 +65,7 @@ Transform:
 			var floatPartValue *models.FloatPartValue
 			if attributes != nil && attr.FloatPartValue != nil {
 				if *attr.FloatPartValue != "any" {
-					fpv, err := models.ParseFloatPartValue(string(*attr.FloatPartValue))
+					fpv, err := models.ParseFloatPartValueByString(string(*attr.FloatPartValue))
 					if err != nil {
 						err = nil
 					}
@@ -76,7 +76,7 @@ Transform:
 			var phase *models.Phase
 			if attributes != nil && attr.PhaseTitle != nil {
 				if *attr.PhaseTitle != "any" {
-					p, err := models.ParsePhase(string(*attr.PhaseTitle))
+					p, err := models.ParsePhase(models.DMARKET, string(*attr.PhaseTitle))
 					if err != nil {
 						err = nil
 					}
@@ -109,6 +109,7 @@ Transform:
 			price := int(p64)
 
 			order := models.BuyOrder{
+				Market:         models.DMARKET,
 				MarketHashName: marketHashName,
 				FloatPartValue: floatPartValue,
 				Phase:          phase,

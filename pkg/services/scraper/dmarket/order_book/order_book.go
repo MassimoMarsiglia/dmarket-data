@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/MassimoMarsiglia/dmarket-bot/pkg/client"
+	"github.com/MassimoMarsiglia/dmarket-bot/pkg/client/dmarket"
 	"github.com/MassimoMarsiglia/dmarket-bot/pkg/models"
 	"go.uber.org/zap"
 )
@@ -14,7 +14,7 @@ var ErrRateLimitSurpassed = errors.New("rate limit has been surpassed (429)")
 
 var ErrBadStatusCode = errors.New("bad status code")
 
-func (s *Service) getOrderBook(ctx context.Context, c *client.ClientWithResponses, params *client.GetOrderBookParams) ([]models.BuyOrder, error) {
+func (s *Service) getOrderBook(ctx context.Context, c *dmarket.ClientWithResponses, params *dmarket.GetOrderBookParams) ([]models.BuyOrder, error) {
 	resp, err := c.GetOrderBookWithResponse(ctx, params)
 	if err != nil {
 		s.logger.Error("Failed to fetch new listings...", zap.Error(err))

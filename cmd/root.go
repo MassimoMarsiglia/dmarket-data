@@ -4,9 +4,10 @@ import (
 	"os"
 
 	"github.com/MassimoMarsiglia/dmarket-bot/cmd/modules"
-	"github.com/MassimoMarsiglia/dmarket-bot/cmd/modules/NewListing"
-	orderbook "github.com/MassimoMarsiglia/dmarket-bot/cmd/modules/OrderBook"
+	bufflisting "github.com/MassimoMarsiglia/dmarket-bot/cmd/modules/buff/listing"
 	"github.com/MassimoMarsiglia/dmarket-bot/cmd/modules/config"
+	"github.com/MassimoMarsiglia/dmarket-bot/cmd/modules/dmarket/NewListing"
+	orderbook "github.com/MassimoMarsiglia/dmarket-bot/cmd/modules/dmarket/OrderBook"
 	"github.com/spf13/cobra"
 )
 
@@ -24,6 +25,7 @@ func init() {
 	config.InitFlags(RunCmd)
 	NewListing.InitFlags(RunCmd)
 	orderbook.InitFlags(RunCmd)
+	bufflisting.InitFlags(RunCmd)
 }
 
 // rootCmd represents the base command when called without any subcommands

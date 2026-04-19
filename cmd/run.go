@@ -8,9 +8,10 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/MassimoMarsiglia/dmarket-bot/cmd/modules/NewListing"
-	orderbook "github.com/MassimoMarsiglia/dmarket-bot/cmd/modules/OrderBook"
+	bufflisting "github.com/MassimoMarsiglia/dmarket-bot/cmd/modules/buff/listing"
 	"github.com/MassimoMarsiglia/dmarket-bot/cmd/modules/config"
+	"github.com/MassimoMarsiglia/dmarket-bot/cmd/modules/dmarket/NewListing"
+	orderbook "github.com/MassimoMarsiglia/dmarket-bot/cmd/modules/dmarket/OrderBook"
 	"github.com/nats-io/nats-server/v2/server"
 	"github.com/nats-io/nats.go"
 	"github.com/spf13/cobra"
@@ -66,16 +67,18 @@ var RunCmd = &cobra.Command{
 			return err
 		}
 
-		if cfg.NewListing.Enabled {
-			accDir := cfg.NewListing.AccDir
+		if cfg.Dmarket.NewListing.Enabled {
+			accDir := cfg.Dmarket.NewListing.AccDir
 			delay, err := cmd.Flags().GetDuration("dmarket.new_listing.delay")
 			if err != nil {
 				return err
 			}
 			logger.Debug("starting with:", zap.Duration("new_listing poll delay:", delay))
 
+			lgr := logger.With(zap.String("source", "dmarket.new-listing"))
+
 			newListingModule, err := NewListing.New(
-				logger,
+				lgr,
 				cmd,
 				config.NewListingCfg{
 					AccDir: accDir,
@@ -89,17 +92,19 @@ var RunCmd = &cobra.Command{
 			newListingModule.Run(context.Background())
 		}
 
-		if cfg.OrderBook.Enabled {
-			accDir := cfg.OrderBook.AccDir
-			itemDir := cfg.OrderBook.ItemDir
+		if cfg.Dmarket.OrderBook.Enabled {
+			accDir := cfg.Dmarket.OrderBook.AccDir
+			itemDir := cfg.Dmarket.OrderBook.ItemDir
 			delay, err := cmd.Flags().GetDuration("dmarket.orderbook.delay")
 			if err != nil {
 				return err
 			}
 			logger.Debug("starting with:", zap.Duration("order book poll delay:", delay))
 
+			lgr := logger.With(zap.String("source", "dmarket.order-book"))
+
 			orderBookModule, err := orderbook.New(
-				logger,
+				lgr,
 				cmd,
 				config.OrderBookCfg{
 					ItemDir: itemDir,
@@ -112,6 +117,32 @@ var RunCmd = &cobra.Command{
 				return err
 			}
 			orderBookModule.Run(context.Background())
+		}
+
+		if cfg.Buff.Listing.Enabled {
+			accDir := cfg.Buff.Listing.AccDir
+			mapdir := cfg.Buff.Listing.MappingDir
+			delay, err := cmd.Flags().GetDuration("buff.listing.delay")
+			if err != nil {
+				return err
+			}
+			logger.Debug("starting with:", zap.Duration("buff listing poll delay:", delay))
+			lgr := logger.With(zap.String("source", "buff.listing"))
+
+			buffListingModule, err := bufflisting.New(
+				lgr,
+				cmd,
+				config.BuffListingCfg{
+					MappingDir: mapdir,
+					AccDir:     accDir,
+					Delay:      delay,
+					Conn:       nc,
+				},
+			)
+			if err != nil {
+				return err
+			}
+			buffListingModule.Run(context.Background())
 		}
 
 		fmt.Println("running... press Ctrl+C to exit")

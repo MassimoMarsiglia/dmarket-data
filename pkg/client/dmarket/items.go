@@ -1,4 +1,4 @@
-package client
+package dmarket
 
 import (
 	"strconv"
@@ -53,11 +53,13 @@ Transform:
 				})
 			}
 		}
+
 		i := models.Item{
+			MarketType:     models.DMARKET,
 			MarketHashName: item.Title,
 			Image:          item.Image,
 			Price:          price,
-			Owner:          owner,
+			Owner:          &owner,
 			Float:          item.Extra.FloatValue,
 			PaintSeed:      item.Extra.PaintSeed,
 			Stickers:       stickers,
@@ -68,7 +70,7 @@ Transform:
 
 		rawFloatPartValue := item.Extra.FloatPartValue
 		if rawFloatPartValue != nil {
-			floatPartValue, err := models.ParseFloatPartValue(string(*rawFloatPartValue))
+			floatPartValue, err := models.ParseFloatPartValueByString(string(*rawFloatPartValue))
 			if err != nil {
 				return nil, err
 			}
@@ -85,7 +87,7 @@ Transform:
 
 		rawPhase := item.Extra.Phase
 		if rawPhase != nil {
-			phase, err := models.ParsePhase(string(*rawPhase))
+			phase, err := models.ParsePhase(i.MarketType, string(*rawPhase))
 			if err != nil {
 				return nil, err
 			}

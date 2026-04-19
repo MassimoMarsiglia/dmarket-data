@@ -7,7 +7,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/MassimoMarsiglia/dmarket-bot/pkg/client"
+	"github.com/MassimoMarsiglia/dmarket-bot/pkg/client/dmarket"
 	CS2Models "github.com/MassimoMarsiglia/dmarket-bot/pkg/models/CS2"
 	"github.com/gammazero/deque"
 	"go.uber.org/zap"
@@ -15,9 +15,9 @@ import (
 
 var ErrNoClients = errors.New("no clients loaded")
 
-func LoadDmarketAccounts(logger *zap.Logger, accDir *string, cfgs []client.DmarketCfg) (*deque.Deque[*client.ClientWithResponses], error) {
+func LoadDmarketAccounts(logger *zap.Logger, accDir *string, cfgs []dmarket.DmarketCfg) (*deque.Deque[*dmarket.ClientWithResponses], error) {
 	logger.Debug("loading dmarket accounts")
-	var clients deque.Deque[*client.ClientWithResponses]
+	var clients deque.Deque[*dmarket.ClientWithResponses]
 	if accDir != nil && *accDir != "" {
 		dir := *accDir
 		logger.Debug("loading dmarket accounts", zap.String("dir", dir))
@@ -30,7 +30,7 @@ func LoadDmarketAccounts(logger *zap.Logger, accDir *string, cfgs []client.Dmark
 		defer reader.Close()
 		data, err := io.ReadAll(reader)
 
-		var accounts []client.DmarketCfg
+		var accounts []dmarket.DmarketCfg
 		err = json.Unmarshal(data, &accounts)
 		if err != nil {
 			return nil, err
@@ -39,7 +39,7 @@ func LoadDmarketAccounts(logger *zap.Logger, accDir *string, cfgs []client.Dmark
 		clients.SetBaseCap(clients.Len() + len(cfgs))
 		for _, acc := range accounts {
 			acc.Logger = logger
-			acc, err := client.NewDmarketClient(acc)
+			acc, err := dmarket.NewDmarketClient(acc)
 			if err != nil {
 				return nil, err
 			}
@@ -47,7 +47,7 @@ func LoadDmarketAccounts(logger *zap.Logger, accDir *string, cfgs []client.Dmark
 		}
 	}
 	for _, acc := range cfgs {
-		acc, err := client.NewDmarketClient(acc)
+		acc, err := dmarket.NewDmarketClient(acc)
 		if err != nil {
 			return nil, err
 		}
@@ -64,9 +64,9 @@ func LoadDmarketAccounts(logger *zap.Logger, accDir *string, cfgs []client.Dmark
 	return &clients, nil
 }
 
-func LoadDmarketOrderBookQueue(logger *zap.Logger, dir string) (*deque.Deque[*client.GetOrderBookParams], error) {
+func LoadDmarketOrderBookQueue(logger *zap.Logger, dir string) (*deque.Deque[*dmarket.GetOrderBookParams], error) {
 	logger.Debug("Filling order book request queue...")
-	var reqs deque.Deque[*client.GetOrderBookParams]
+	var reqs deque.Deque[*dmarket.GetOrderBookParams]
 
 	skins, err := loadSkinsNotGrouped(dir)
 	if err != nil {
@@ -82,17 +82,17 @@ func LoadDmarketOrderBookQueue(logger *zap.Logger, dir string) (*deque.Deque[*cl
 
 	for i := range skins {
 		skin := skins[i]
-		reqs.PushBack(&client.GetOrderBookParams{
+		reqs.PushBack(&dmarket.GetOrderBookParams{
 			Title:  skin.MarketHashName,
-			GameId: client.GameIDA8db,
+			GameId: dmarket.GameIDA8db,
 		})
 	}
 
 	for i := range stickers {
 		sticker := stickers[i]
-		reqs.PushBack(&client.GetOrderBookParams{
+		reqs.PushBack(&dmarket.GetOrderBookParams{
 			Title:  sticker.Name,
-			GameId: client.GameIDA8db,
+			GameId: dmarket.GameIDA8db,
 		})
 	}
 

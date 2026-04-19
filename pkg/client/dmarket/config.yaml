@@ -1,4 +1,4 @@
-package: client
+package: dmarket
 generate:
   client: true
   models: true

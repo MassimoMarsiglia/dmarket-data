@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/MassimoMarsiglia/dmarket-bot/pkg/client"
+	"github.com/MassimoMarsiglia/dmarket-bot/pkg/client/dmarket"
 	"github.com/MassimoMarsiglia/dmarket-bot/pkg/models"
 	"github.com/gammazero/deque"
 	"github.com/nats-io/nats.go"
@@ -20,7 +20,7 @@ const NATS_KEY = "dmarket.new_listing"
 type (
 	ServiceCfg struct {
 		Conn        *nats.Conn
-		DmarketCfgs []client.DmarketCfg
+		DmarketCfgs []dmarket.DmarketCfg
 		Delay       time.Duration
 		Context     context.Context
 		Logger      *zap.Logger
@@ -30,9 +30,9 @@ type (
 	Service struct {
 		nc      *nats.Conn
 		logger  *zap.Logger
-		filters []client.FilterFunc[models.Item]
+		filters []dmarket.FilterFunc[models.Item]
 		context context.Context
-		clients *deque.Deque[*client.ClientWithResponses]
+		clients *deque.Deque[*dmarket.ClientWithResponses]
 		mu      sync.Mutex
 		ticker  *time.Ticker
 	}

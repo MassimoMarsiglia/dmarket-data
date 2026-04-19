@@ -4,7 +4,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/MassimoMarsiglia/dmarket-bot/pkg/client"
+	"github.com/MassimoMarsiglia/dmarket-bot/pkg/client/dmarket"
 	"github.com/MassimoMarsiglia/dmarket-bot/pkg/models"
 	dmarket_utils "github.com/MassimoMarsiglia/dmarket-bot/pkg/utils/dmarket"
 )
@@ -17,12 +17,13 @@ func New(cfg ServiceCfg) (*Service, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	svc := &Service{
 		nc:      cfg.Conn,
 		clients: clients,
 		context: cfg.Context,
 		ticker:  time.NewTicker(cfg.Delay),
-		filters: []client.FilterFunc[models.Item]{client.PriceIDFilter()},
+		filters: []dmarket.FilterFunc[models.Item]{dmarket.PriceIDFilter()},
 		logger:  cfg.Logger,
 	}
 

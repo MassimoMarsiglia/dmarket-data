@@ -4,10 +4,11 @@ import "time"
 
 type (
 	Item struct {
+		MarketType     MarketType      `json:"market"`
 		MarketHashName string          `json:"market_hash_name"`
 		Image          string          `json:"image_url"`
 		Price          int64           `json:"price"`
-		Owner          Owner           `json:"owner"`
+		Owner          *Owner          `json:"owner"`
 		FloatPartValue *FloatPartValue `json:"float_part_value"`
 		Phase          *Phase          `json:"phase"`
 		Float          *float32        `json:"float_value"`

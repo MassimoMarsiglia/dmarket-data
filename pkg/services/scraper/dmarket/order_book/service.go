@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/MassimoMarsiglia/dmarket-bot/pkg/client"
+	"github.com/MassimoMarsiglia/dmarket-bot/pkg/client/dmarket"
 	"github.com/MassimoMarsiglia/dmarket-bot/pkg/models"
 	"github.com/gammazero/deque"
 	"github.com/nats-io/nats.go"
@@ -21,7 +21,7 @@ const NATS_KEY = "dmarket.orderbook"
 type (
 	ServiceCfg struct {
 		Conn        *nats.Conn
-		DmarketCfgs []client.DmarketCfg
+		DmarketCfgs []dmarket.DmarketCfg
 		Delay       time.Duration
 		Context     context.Context
 		Logger      *zap.Logger
@@ -32,10 +32,10 @@ type (
 	Service struct {
 		nc      *nats.Conn
 		logger  *zap.Logger
-		filters []client.FilterFunc[models.BuyOrder]
+		filters []dmarket.FilterFunc[models.BuyOrder]
 		context context.Context
-		clients *deque.Deque[*client.ClientWithResponses]
-		queue   *deque.Deque[*client.GetOrderBookParams]
+		clients *deque.Deque[*dmarket.ClientWithResponses]
+		queue   *deque.Deque[*dmarket.GetOrderBookParams]
 
 		mu     sync.Mutex
 		ticker *time.Ticker

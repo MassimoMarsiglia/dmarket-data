@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/MassimoMarsiglia/dmarket-bot/pkg/client"
+	"github.com/MassimoMarsiglia/dmarket-bot/pkg/client/dmarket"
 	"github.com/MassimoMarsiglia/dmarket-bot/pkg/models"
 	"github.com/MassimoMarsiglia/dmarket-bot/pkg/utils"
 	"go.uber.org/zap"
@@ -15,9 +15,9 @@ var ErrRateLimitSurpassed = errors.New("rate limit has been surpassed (429)")
 
 var ErrBadStatusCode = errors.New("bad status code")
 
-func (s *Service) getNewListings(ctx context.Context, c *client.ClientWithResponses) ([]models.Item, error) {
-	resp, err := c.GetMarketItemsWithResponse(ctx, &client.GetMarketItemsParams{
-		GameId:   client.GameIDA8db,
+func (s *Service) getNewListings(ctx context.Context, c *dmarket.ClientWithResponses) ([]models.Item, error) {
+	resp, err := c.GetMarketItemsWithResponse(ctx, &dmarket.GetMarketItemsParams{
+		GameId:   dmarket.GameIDA8db,
 		Currency: "USD",
 		Limit:    utils.Ptr(20),
 		OrderBy:  utils.Ptr("updated"),

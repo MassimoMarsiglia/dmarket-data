@@ -1,0 +1,374 @@
+openapi: 3.0.3
+info:
+  title: BUFF Market API (Combined Strict)
+  version: 1.2.0
+
+servers:
+  - url: https://buff.163.com
+
+paths:
+
+  /api/market/goods/sell_order:
+    get:
+      summary: Get sell orders
+      parameters:
+        - { name: game, in: query, required: true, schema: { type: string } }
+        - { name: goods_id, in: query, required: true, schema: { type: integer } }
+        - { name: page_num, in: query, schema: { type: integer } }
+        - { name: sort_by, in: query, schema: { type: string } }
+        - { name: mode, in: query, schema: { type: string, nullable: true } }
+        - { name: allow_tradable_cooldown, in: query, schema: { type: integer } }
+        - { name: _, in: query, schema: { type: integer } }
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SellOrderResponse'
+
+  /api/market/goods/buy_order:
+    get:
+      summary: Get buy orders
+      parameters:
+        - { name: game, in: query, required: true, schema: { type: string } }
+        - { name: goods_id, in: query, required: true, schema: { type: integer } }
+        - { name: page_num, in: query, schema: { type: integer } }
+        - { name: _, in: query, schema: { type: integer } }
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BuyOrderResponse'
+
+components:
+  schemas:
+
+    # -------- GENERIC RESPONSE --------
+
+    BaseResponse:
+      type: object
+      required: [code, data, msg]
+      properties:
+        code: { type: string }
+        msg:
+          type: string
+          nullable: true
+
+    # -------- SELL SIDE --------
+
+    SellOrderResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          required: [data]
+          properties:
+            data:
+              $ref: '#/components/schemas/SellOrderData'
+
+    SellOrderData:
+      type: object
+      required:
+        - page_num
+        - page_size
+        - total_page
+        - total_count
+        - items
+        - goods_infos
+        - user_infos
+        - has_market_stores
+        - sort_by
+      properties:
+        page_num: { type: integer }
+        page_size: { type: integer }
+        total_page: { type: integer }
+        total_count: { type: integer }
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/SellOrder'
+        goods_infos:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/GoodsInfo'
+        user_infos:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/UserInfo'
+        has_market_stores:
+          type: object
+          additionalProperties:
+            type: boolean
+        sort_by: { type: string }
+
+    SellOrder:
+      type: object
+      required:
+        - appid
+        - game
+        - id
+        - user_id
+        - asset_info
+        - price
+        - fee
+        - state
+        - mode
+        - goods_id
+        - created_at
+        - updated_at
+        - allow_bargain
+        - income
+        - order_type
+        - state_text
+        - bookmarked
+        - can_bargain
+        - supported_pay_methods
+      properties:
+        appid: { type: integer }
+        game: { type: string }
+        id: { type: string }
+        user_id: { type: string }
+        price: { type: string }
+        fee: { type: string }
+        state: { type: integer }
+        mode: { type: integer }
+        goods_id: { type: integer }
+        created_at: { type: integer }
+        updated_at: { type: integer }
+        allow_bargain: { type: boolean }
+        income: { type: string }
+        order_type: { type: integer }
+        state_text: { type: string }
+        bookmarked: { type: boolean }
+        can_bargain: { type: boolean }
+        supported_pay_methods:
+          type: array
+          items: { type: integer }
+        asset_info:
+          $ref: '#/components/schemas/AssetInfo'
+
+    AssetInfo:
+      type: object
+      required:
+        - appid
+        - contextid
+        - assetid
+        - classid
+        - instanceid
+        - goods_id
+        - paintwear
+        - id
+        - info
+        - has_tradable_cooldown
+      properties:
+        appid: { type: integer }
+        contextid: { type: integer }
+        assetid: { type: string }
+        classid: { type: string }
+        instanceid: { type: string }
+        goods_id: { type: integer }
+        paintwear: { type: string }
+        id: { type: string }
+        has_tradable_cooldown: { type: boolean }
+        info:
+          $ref: '#/components/schemas/ItemInfo'
+
+    ItemInfo:
+      type: object
+      required:
+        - icon_url
+        - original_icon_url
+        - paintseed
+        - paintindex
+        - stickers
+        - keychains
+      properties:
+        icon_url:
+          type: string
+        original_icon_url:
+          type: string
+        paintseed:
+          type: integer
+        paintindex:
+          type: integer
+        phase_data:
+          $ref: '#/components/schemas/PhaseData'
+        stickers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Sticker'
+        keychains:
+          type: array
+          items:
+            type: object
+    
+    PhaseData:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          $ref: '#/components/schemas/Phase'
+    
+    Phase:
+      type: string
+      enum:
+        - P1
+        - P2
+        - P3
+        - P4
+        - Sapphire
+        - Ruby
+        - Black_Pearl
+
+
+    Sticker:
+      type: object
+      required: [name, slot, category, img_url]
+      properties:
+        name: { type: string }
+        slot: { type: integer }
+        wear: { type: number }
+        img_url: { type: string }
+        category: { type: string }
+
+    GoodsInfo:
+      type: object
+      required:
+        - appid
+        - game
+        - goods_id
+        - name
+        - market_hash_name
+        - steam_price
+        - sell_min_price
+      properties:
+        appid: { type: integer }
+        game: { type: string }
+        goods_id: { type: integer }
+        name: { type: string }
+        market_hash_name: { type: string }
+        steam_price: { type: string }
+        sell_min_price: { type: string }
+
+    # -------- BUY SIDE --------
+
+    BuyOrderResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          required: [data]
+          properties:
+            data:
+              $ref: '#/components/schemas/BuyOrderData'
+
+    BuyOrderData:
+      type: object
+      required:
+        - page_num
+        - page_size
+        - total_page
+        - total_count
+        - items
+        - user_infos
+        - show_pay_method_icon
+      properties:
+        page_num: { type: integer }
+        page_size: { type: integer }
+        total_page: { type: integer }
+        total_count: { type: integer }
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/BuyOrder'
+        user_infos:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/UserInfo'
+        show_pay_method_icon: { type: boolean }
+
+    BuyOrder:
+      type: object
+      required:
+        - appid
+        - game
+        - id
+        - user_id
+        - num
+        - real_num
+        - frozen_num
+        - state
+        - goods_id
+        - price
+        - fee
+        - frozen_amount
+        - created_at
+        - updated_at
+        - allow_tradable_cooldown
+        - specific
+        - icon_url
+        - pay_expire_timeout
+        - pay_method_text
+        - pay_method
+        - state_text
+      properties:
+        appid: { type: integer }
+        game: { type: string }
+        id: { type: string }
+        user_id: { type: string }
+        num: { type: integer }
+        real_num: { type: integer }
+        frozen_num: { type: integer }
+        state: { type: string }
+        goods_id: { type: integer }
+        price: { type: string }
+        fee: { type: string }
+        frozen_amount: { type: string }
+        created_at: { type: integer }
+        updated_at: { type: integer }
+        allow_tradable_cooldown: { type: integer }
+        tradable_cooldown:
+          type: integer
+          nullable: true
+        specific:
+          type: array
+          items: {}
+        icon_url: { type: string }
+        pay_expire_timeout: { type: integer }
+        expire_time:
+          type: integer
+          nullable: true
+        pay_method_text: { type: string }
+        pay_method: { type: integer }
+        state_text: { type: string }
+
+    # -------- SHARED --------
+
+    UserInfo:
+      type: object
+      required:
+        - user_id
+        - avatar
+        - shop_id
+        - avatar_safe
+        - nickname
+        - is_auto_accept
+        - seller_level
+        - is_premium_vip
+      properties:
+        user_id: { type: string }
+        avatar: { type: string }
+        avatar_safe: { type: string }
+        shop_id: { type: string }
+        nickname: { type: string }
+        is_auto_accept: { type: boolean }
+        seller_level: { type: integer }
+        v_types:
+          type: array
+          items: { type: string }
+          nullable: true
+        is_premium_vip: { type: boolean }

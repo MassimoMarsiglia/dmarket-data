@@ -1,0 +1,64 @@
+components:
+  schemas:
+    Item:
+      type: object
+      required:
+        - buff163_goods_id
+        - youpin_id
+        - buffmarket_goods_id
+      properties:
+        buff163_goods_id:
+          type: integer
+          description: Primary ID for Buff163.
+        youpin_id:
+          type: integer
+          description: Primary ID for Youpin.
+        buffmarket_goods_id:
+          type: integer
+          description: Primary ID for BuffMarket.
+        buff163_sticker_id:
+          type: integer
+          description: Specialized ID for stickers.
+        buff163_patch_id:
+          type: integer
+          description: Specialized ID for agent patches.
+        buff163_phase_ids:
+          $ref: '#/components/schemas/PhaseIds'
+        buff163_paintseed_group_ids:
+          type: object
+          description: Pattern group IDs, such as Blue Gems for Case Hardened items.
+          additionalProperties:
+            type: integer
+        pattern_groups:
+          $ref: '#/components/schemas/PatternGroups'
+
+    PhaseIds:
+      type: object
+      description: Maps specific Doppler/Gamma Doppler phases to Buff163 IDs.
+      properties:
+        Phase 1: { type: integer }
+        Phase 2: { type: integer }
+        Phase 3: { type: integer }
+        Phase 4: { type: integer }
+        Ruby: { type: integer }
+        Sapphire: { type: integer }
+        Black Pearl: { type: integer }
+        Emerald: { type: integer }
+
+    PatternGroups:
+      type: object
+      description: Arrays of paint seeds for specific Fade percentages or patterns.
+      additionalProperties:
+        type: array
+        items:
+          type: integer
+
+    ItemMapping:
+      type: object
+      description: Buff mapping object
+      required: ['items']
+      properties:
+        items:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/Item'

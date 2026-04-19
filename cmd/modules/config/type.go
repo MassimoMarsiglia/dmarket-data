@@ -7,6 +7,14 @@ import (
 	"go.uber.org/zap"
 )
 
+type BuffListingCfg struct {
+	AccDir     string `yaml:"acc_path"`
+	MappingDir string `yaml:"mapping_path"`
+	Enabled    bool   `yaml:"enabled"`
+	Conn       *nats.Conn
+	Delay      time.Duration
+}
+
 type NewListingCfg struct {
 	AccDir  string `yaml:"acc_path"`
 	Enabled bool   `yaml:"enabled"`
@@ -28,6 +36,15 @@ type Config[T any] struct {
 }
 
 type BotConfig struct {
+	Dmarket DmarketConfig `yaml:"Dmarket"`
+	Buff    BuffConfig    `yaml:"Buff"`
+}
+
+type BuffConfig struct {
+	Listing BuffListingCfg `yaml:"Listing"`
+}
+
+type DmarketConfig struct {
 	NewListing NewListingCfg `yaml:"NewListing"`
 	OrderBook  OrderBookCfg  `yaml:"OrderBook"`
 }
