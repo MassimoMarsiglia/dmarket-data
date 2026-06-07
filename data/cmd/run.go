@@ -16,6 +16,7 @@ import (
 	"github.com/MassimoMarsiglia/dmarket-bot/pkg/nats/emitter/dmarket/new_listing"
 	emorderbook "github.com/MassimoMarsiglia/dmarket-bot/pkg/nats/emitter/dmarket/orderbook"
 	"github.com/MassimoMarsiglia/dmarket-bot/pkg/nats/emitter/dmarket/sales"
+	"github.com/MassimoMarsiglia/dmarket-bot/pkg/utils/cs2"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 )
@@ -46,10 +47,15 @@ var RunCmd = &cobra.Command{
 			return err
 		}
 
-		orderbookEm := emorderbook.New(emorderbook.Config{Conn: nc})
-		newListingEm := newlisting.New(newlisting.Config{Conn: nc})
-		_ = sales.New(sales.Config{Conn: nc})
-		buffListingEm := listing.New(listing.Config{Conn: nc})
+		lookup, err := cs2.LoadLookupTable(cfg.Lookup.SkinsPath, cfg.Lookup.StickersPath)
+		if err != nil {
+			return err
+		}
+
+		orderbookEm := emorderbook.New(emorderbook.Config{Conn: nc, Lookup: lookup})
+		newListingEm := newlisting.New(newlisting.Config{Conn: nc, Lookup: lookup})
+		_ = sales.New(sales.Config{Conn: nc, Lookup: lookup})
+		buffListingEm := listing.New(listing.Config{Conn: nc, Lookup: lookup})
 
 		if cfg.Dmarket.NewListing.Enabled {
 			accDir := cfg.Dmarket.NewListing.AccDir

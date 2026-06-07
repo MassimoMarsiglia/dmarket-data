@@ -3,5 +3,6 @@ package sales
 import "github.com/nats-io/nats.go"
 
 type Emitter struct {
-	nc *nats.Conn
+	nc     *nats.Conn
+	lookup map[string]string
 }

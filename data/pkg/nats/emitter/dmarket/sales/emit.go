@@ -8,6 +8,11 @@ import (
 )
 
 func (e *Emitter) Emit(s models.Sale) error {
+	err := e.Lookup(&s)
+	if err != nil {
+		return err
+	}
+
 	subject := e.Subject(s)
 	data, err := json.Marshal(s)
 	if err != nil {

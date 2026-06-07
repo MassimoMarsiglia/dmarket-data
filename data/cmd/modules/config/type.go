@@ -51,9 +51,15 @@ type Config[T any] struct {
 	path   string
 }
 
+type LookupCfg struct {
+	SkinsPath    string `yaml:"skins_path"`
+	StickersPath string `yaml:"stickers_path"`
+}
+
 type BotConfig struct {
 	Dmarket DmarketConfig `yaml:"Dmarket"`
 	Buff    BuffConfig    `yaml:"Buff"`
+	Lookup  LookupCfg     `yaml:"Lookup"`
 }
 
 type BuffConfig struct {

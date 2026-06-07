@@ -17,5 +17,10 @@ func (e *Emitter) Subject(s models.Sale) string {
 		phase = s.Phase.String()
 	}
 
-	return fmt.Sprintf("dmarket.sales.%s.%s.%s", s.MarketHashName, fpv, phase)
+	skinID := "nil"
+	if s.SkinID != "" {
+		skinID = s.SkinID
+	}
+
+	return fmt.Sprintf("dmarket.sales.%s.%s.%s", skinID, fpv, phase)
 }

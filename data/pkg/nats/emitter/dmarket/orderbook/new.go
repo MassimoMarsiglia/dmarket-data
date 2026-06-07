@@ -3,9 +3,10 @@ package orderbook
 import "github.com/nats-io/nats.go"
 
 type Config struct {
-	Conn *nats.Conn
+	Conn   *nats.Conn
+	Lookup map[string]string
 }
 
 func New(cfg Config) *Emitter {
-	return &Emitter{nc: cfg.Conn}
+	return &Emitter{nc: cfg.Conn, lookup: cfg.Lookup}
 }

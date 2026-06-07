@@ -17,5 +17,10 @@ func (e *Emitter) Subject(o models.BuyOrder) string {
 		phase = o.Phase.String()
 	}
 
-	return fmt.Sprintf("dmarket.orderbook.%s.%s.%s", o.MarketHashName, fpv, phase)
+	skinID := "nil"
+	if o.SkinID != "" {
+		skinID = o.SkinID
+	}
+
+	return fmt.Sprintf("dmarket.orderbook.%s.%s.%s", skinID, fpv, phase)
 }

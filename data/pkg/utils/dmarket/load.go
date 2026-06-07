@@ -7,7 +7,7 @@ import (
 	"os"
 
 	"github.com/MassimoMarsiglia/dmarket-bot/pkg/client/dmarket"
-	CS2Models "github.com/MassimoMarsiglia/dmarket-bot/pkg/models/CS2"
+	"github.com/MassimoMarsiglia/dmarket-bot/pkg/utils/cs2"
 	"github.com/gammazero/deque"
 	"go.uber.org/zap"
 )
@@ -67,12 +67,12 @@ func LoadDmarketOrderBookQueue(logger *zap.Logger, skinsPath, stickersPath strin
 	logger.Debug("Filling order book request queue...")
 	var reqs deque.Deque[*dmarket.GetOrderBookParams]
 
-	skins, err := loadSkinsNotGrouped(skinsPath)
+	skins, err := cs2.LoadSkinsNotGrouped(skinsPath)
 	if err != nil {
 		return nil, err
 	}
 
-	stickers, err := loadStickers(stickersPath)
+	stickers, err := cs2.LoadStickers(stickersPath)
 	if err != nil {
 		return nil, err
 	}
@@ -99,38 +99,4 @@ func LoadDmarketOrderBookQueue(logger *zap.Logger, skinsPath, stickersPath strin
 	logger.Debug("Filled order book request queue with", zap.Int("num reqs:", amount))
 
 	return &reqs, nil
-}
-
-func loadStickers(path string) ([]CS2Models.Sticker, error) {
-	reader, err := os.Open(path)
-	if err != nil {
-		return nil, err
-	}
-
-	defer reader.Close()
-	data, err := io.ReadAll(reader)
-
-	var stickers []CS2Models.Sticker
-	err = json.Unmarshal(data, &stickers)
-	if err != nil {
-		return nil, err
-	}
-
-	return stickers, nil
-}
-
-func loadSkinsNotGrouped(path string) ([]CS2Models.SkinNotGrouped, error) {
-	reader, err := os.Open(path)
-	if err != nil {
-		return nil, err
-	}
-	defer reader.Close()
-	data, err := io.ReadAll(reader)
-
-	var skins []CS2Models.SkinNotGrouped
-	err = json.Unmarshal(data, &skins)
-	if err != nil {
-		return nil, err
-	}
-	return skins, nil
 }
