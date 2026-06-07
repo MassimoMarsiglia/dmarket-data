@@ -3,9 +3,7 @@ package buff
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/http"
-	"net/url"
 
 	"go.uber.org/zap"
 )
@@ -34,20 +32,12 @@ func NewBuffClient(cfg BuffCfg) (*ClientWithResponses, error) {
 	opts := []ClientOption{}
 
 	if cfg.Proxy != nil {
-		proxyUrl, err := url.Parse(*cfg.Proxy)
+		proxy, err := WithProxy(*cfg.Proxy)
 		if err != nil {
-			return nil, fmt.Errorf("%w proxy url %s", ErrFailedToParse, *cfg.Proxy)
+			return nil, err
 		}
-		_ = proxyUrl
-		opts = append(opts, WithHTTPClient(
-			&http.Client{
-				Transport: &http.Transport{
-					MaxIdleConnsPerHost: 10,
-					Proxy:               http.ProxyURL(proxyUrl),
-				},
-			},
-		))
-		opts = append(opts, WithRequestEditorFn(BuffHeaders()))
+		opts = append(opts, proxy)
 	}
+	opts = append(opts, WithRequestEditorFn(BuffHeaders()))
 	return NewClientWithResponses(BuffURL, opts...)
 }

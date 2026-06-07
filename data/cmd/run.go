@@ -3,7 +3,6 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"log"
 	"os"
 	"os/signal"
 	"syscall"
@@ -12,31 +11,10 @@ import (
 	"github.com/MassimoMarsiglia/dmarket-bot/cmd/modules/config"
 	"github.com/MassimoMarsiglia/dmarket-bot/cmd/modules/dmarket/NewListing"
 	orderbook "github.com/MassimoMarsiglia/dmarket-bot/cmd/modules/dmarket/OrderBook"
-	"github.com/nats-io/nats-server/v2/server"
 	"github.com/nats-io/nats.go"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 )
-
-func startNATSServer() *server.Server {
-	opts := &server.Options{
-		Host: "127.0.0.1",
-		Port: 4222,
-	}
-
-	s, err := server.NewServer(opts)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	go s.Start()
-
-	if !s.ReadyForConnections(10 * 1e9) {
-		log.Fatal("NATS not ready")
-	}
-
-	return s
-}
 
 var RunCmd = &cobra.Command{
 	Use:   "run",
@@ -59,19 +37,24 @@ var RunCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		s := startNATSServer()
-		defer s.Shutdown()
+		natsURL := os.Getenv("NATS_URL")
+		if natsURL == "" {
+			natsURL = nats.DefaultURL
+		}
 
-		nc, err := nats.Connect(nats.DefaultURL)
+		nc, err := nats.Connect(natsURL)
 		if err != nil {
 			return err
 		}
 
 		if cfg.Dmarket.NewListing.Enabled {
 			accDir := cfg.Dmarket.NewListing.AccDir
-			delay, err := cmd.Flags().GetDuration("dmarket.new_listing.delay")
-			if err != nil {
-				return err
+			delay := cfg.Dmarket.NewListing.Delay
+			if cmd.Flags().Changed("dmarket.new_listing.delay") {
+				delay, err = cmd.Flags().GetDuration("dmarket.new_listing.delay")
+				if err != nil {
+					return err
+				}
 			}
 			logger.Debug("starting with:", zap.Duration("new_listing poll delay:", delay))
 
@@ -95,9 +78,12 @@ var RunCmd = &cobra.Command{
 		if cfg.Dmarket.OrderBook.Enabled {
 			accDir := cfg.Dmarket.OrderBook.AccDir
 			itemDir := cfg.Dmarket.OrderBook.ItemDir
-			delay, err := cmd.Flags().GetDuration("dmarket.orderbook.delay")
-			if err != nil {
-				return err
+			delay := cfg.Dmarket.OrderBook.Delay
+			if cmd.Flags().Changed("dmarket.orderbook.delay") {
+				delay, err = cmd.Flags().GetDuration("dmarket.orderbook.delay")
+				if err != nil {
+					return err
+				}
 			}
 			logger.Debug("starting with:", zap.Duration("order book poll delay:", delay))
 
@@ -122,9 +108,12 @@ var RunCmd = &cobra.Command{
 		if cfg.Buff.Listing.Enabled {
 			accDir := cfg.Buff.Listing.AccDir
 			mapdir := cfg.Buff.Listing.MappingDir
-			delay, err := cmd.Flags().GetDuration("buff.listing.delay")
-			if err != nil {
-				return err
+			delay := cfg.Buff.Listing.Delay
+			if cmd.Flags().Changed("buff.listing.delay") {
+				delay, err = cmd.Flags().GetDuration("buff.listing.delay")
+				if err != nil {
+					return err
+				}
 			}
 			logger.Debug("starting with:", zap.Duration("buff listing poll delay:", delay))
 			lgr := logger.With(zap.String("source", "buff.listing"))

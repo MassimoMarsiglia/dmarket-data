@@ -1,0 +1,51 @@
+[
+  {
+    "id": "skin-1",
+    "skin_id": "skin-1",
+    "name": "AK-47 | Asiimov",
+    "market_hash_name": "AK-47 | Asiimov (Field-Tested)",
+    "description": "AK-47 | Asiimov",
+    "category": {
+      "id": "category-1",
+      "name": "Rifles"
+    },
+    "collections": [],
+    "crates": null,
+    "image": "https://example.com/ak47_asiimov.png",
+    "legacy_model": false,
+    "max_float": 0.8,
+    "min_float": 0.35,
+    "paint_index": "365",
+    "pattern": {
+      "id": "pattern-1",
+      "name": "Asiimov"
+    },
+    "rarity": {
+      "id": "rarity-1",
+      "name": "Covert",
+      "color": "#eb4b4b"
+    },
+    "souvenir": false,
+    "stattrak": false,
+    "style": {
+      "id": 1,
+      "name": "Asiimov",
+      "url": "https://example.com/style.png"
+    },
+    "team": null,
+    "weapon": {
+      "id": "weapon-1",
+      "name": "AK-47",
+      "weapon_id": 7
+    },
+    "wear": {
+      "id": "wear-ft",
+      "name": "Field-Tested"
+    },
+    "wears": [
+      { "id": "wear-ws", "name": "Factory New" },
+      { "id": "wear-ft", "name": "Field-Tested" },
+      { "id": "wear-bf", "name": "Battle-Scarred" }
+    ]
+  }
+]

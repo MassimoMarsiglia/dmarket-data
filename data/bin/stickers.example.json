@@ -1,0 +1,14 @@
+[
+  {
+    "id": "sticker-1",
+    "name": "Navi (Holo) | Cologne 2025",
+    "market_hash_name": "Navi (Holo) | Cologne 2025",
+    "description": "Natus Vincere (Holo) sticker",
+    "image": "https://example.com/navi_holo.png",
+    "rarity": {
+      "id": "rarity-callback",
+      "name": "Callback",
+      "color": "#e95cde"
+    }
+  }
+]

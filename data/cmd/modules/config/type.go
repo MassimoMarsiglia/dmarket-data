@@ -8,34 +8,34 @@ import (
 )
 
 type BuffListingCfg struct {
-	AccDir     string `yaml:"acc_path"`
-	MappingDir string `yaml:"mapping_path"`
-	Enabled    bool   `yaml:"enabled"`
+	AccDir     string        `yaml:"acc_path"`
+	MappingDir string        `yaml:"mapping_path"`
+	Enabled    bool          `yaml:"enabled"`
+	Delay      time.Duration `yaml:"delay"`
 	Conn       *nats.Conn
-	Delay      time.Duration
 }
 
 type NewListingCfg struct {
-	AccDir  string `yaml:"acc_path"`
-	Enabled bool   `yaml:"enabled"`
+	AccDir  string        `yaml:"acc_path"`
+	Enabled bool          `yaml:"enabled"`
+	Delay   time.Duration `yaml:"delay"`
 	Conn    *nats.Conn
-	Delay   time.Duration
 }
 
 type OrderBookCfg struct {
-	AccDir  string `yaml:"acc_path"`
-	Enabled bool   `yaml:"enabled"`
-	ItemDir string `yaml:"item_path"`
+	AccDir  string        `yaml:"acc_path"`
+	Enabled bool          `yaml:"enabled"`
+	ItemDir string        `yaml:"item_path"`
+	Delay   time.Duration `yaml:"delay"`
 	Conn    *nats.Conn
-	Delay   time.Duration
 }
 
 type SalesCfg struct {
-	AccDir  string `yaml:"acc_path"`
-	Enabled bool   `yaml:"enabled"`
-	ItemDir string `yaml:"item_path"`
+	AccDir  string        `yaml:"acc_path"`
+	Enabled bool          `yaml:"enabled"`
+	ItemDir string        `yaml:"item_path"`
+	Delay   time.Duration `yaml:"delay"`
 	Conn    *nats.Conn
-	Delay   time.Duration
 }
 
 type Config[T any] struct {

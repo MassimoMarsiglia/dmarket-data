@@ -32,7 +32,8 @@ main
 # OS X generated file
 .DS_Store
 
-bin
-
-accs.json
+# Ignore bin folder except examples
+data/bin/*
+!data/bin/*.example.json
+!data/bin/*.example.yaml
 

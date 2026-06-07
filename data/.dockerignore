@@ -1,0 +1,9 @@
+.git
+.env
+.env.*
+accs.json
+*.md
+migrations
+tests
+*.test
+tmp

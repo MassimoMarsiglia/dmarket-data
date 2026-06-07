@@ -1,0 +1,21 @@
+Dmarket:
+  NewListing:
+    enabled: true
+    acc_path: "./bin/accs.example.json"
+    delay: 100ms
+  OrderBook:
+    enabled: true
+    acc_path: "./bin/accs.example.json"
+    item_path: "./bin"
+    delay: 100ms
+  Sales:
+    enabled: false
+    acc_path: "./bin/accs.example.json"
+    item_path: "./bin"
+    delay: 100ms
+Buff:
+  Listing:
+    enabled: false
+    acc_path: "./bin/proxy.json"
+    mapping_path: "./bin/cs2_marketplaceids.json"
+    delay: 100ms

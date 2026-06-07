@@ -1,15 +1,18 @@
 services:
-  psql_bp:
-    image: postgres:latest
+  nats:
+    image: nats:latest
     restart: unless-stopped
-    environment:
-      POSTGRES_DB: ${BLUEPRINT_DB_DATABASE}
-      POSTGRES_USER: ${BLUEPRINT_DB_USERNAME}
-      POSTGRES_PASSWORD: ${BLUEPRINT_DB_PASSWORD}
     ports:
-      - "${BLUEPRINT_DB_PORT}:5432"
-    volumes:
-      - psql_volume_bp:/var/lib/postgresql/data
+      - "4222:4222"
 
-volumes:
-  psql_volume_bp:
+  app:
+    build:
+      context: ./data
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - nats
+    environment:
+      - NATS_URL=nats://nats:4222
+    volumes:
+      - ./data/bin:/app/bin:ro

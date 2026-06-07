@@ -1,0 +1,7 @@
+[
+  {
+    "secret_key": "your_dmarket_secret_key",
+    "private_key": "-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEA...\n-----END RSA PRIVATE KEY-----",
+    "proxy_url": "http://user:pass@proxy:port"
+  }
+]
