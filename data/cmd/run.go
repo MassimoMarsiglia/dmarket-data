@@ -10,8 +10,12 @@ import (
 	bufflisting "github.com/MassimoMarsiglia/dmarket-bot/cmd/modules/buff/listing"
 	"github.com/MassimoMarsiglia/dmarket-bot/cmd/modules/config"
 	"github.com/MassimoMarsiglia/dmarket-bot/cmd/modules/dmarket/NewListing"
-	orderbook "github.com/MassimoMarsiglia/dmarket-bot/cmd/modules/dmarket/OrderBook"
-	"github.com/nats-io/nats.go"
+	orderbookmod "github.com/MassimoMarsiglia/dmarket-bot/cmd/modules/dmarket/OrderBook"
+	"github.com/MassimoMarsiglia/dmarket-bot/pkg/nats"
+	"github.com/MassimoMarsiglia/dmarket-bot/pkg/nats/emitter/buff/listing"
+	"github.com/MassimoMarsiglia/dmarket-bot/pkg/nats/emitter/dmarket/new_listing"
+	emorderbook "github.com/MassimoMarsiglia/dmarket-bot/pkg/nats/emitter/dmarket/orderbook"
+	"github.com/MassimoMarsiglia/dmarket-bot/pkg/nats/emitter/dmarket/sales"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 )
@@ -37,15 +41,15 @@ var RunCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		natsURL := os.Getenv("NATS_URL")
-		if natsURL == "" {
-			natsURL = nats.DefaultURL
-		}
-
-		nc, err := nats.Connect(natsURL)
+		nc, err := nats.Connect()
 		if err != nil {
 			return err
 		}
+
+		orderbookEm := emorderbook.New(emorderbook.Config{Conn: nc})
+		newListingEm := newlisting.New(newlisting.Config{Conn: nc})
+		_ = sales.New(sales.Config{Conn: nc})
+		buffListingEm := listing.New(listing.Config{Conn: nc})
 
 		if cfg.Dmarket.NewListing.Enabled {
 			accDir := cfg.Dmarket.NewListing.AccDir
@@ -64,9 +68,10 @@ var RunCmd = &cobra.Command{
 				lgr,
 				cmd,
 				config.NewListingCfg{
-					AccDir: accDir,
-					Delay:  delay,
-					Conn:   nc,
+					AccDir:     accDir,
+					Delay:      delay,
+					Conn:       nc,
+					NewListing: newListingEm,
 				},
 			)
 			if err != nil {
@@ -90,7 +95,7 @@ var RunCmd = &cobra.Command{
 
 			lgr := logger.With(zap.String("source", "dmarket.order-book"))
 
-			orderBookModule, err := orderbook.New(
+			orderBookModule, err := orderbookmod.New(
 				lgr,
 				cmd,
 				config.OrderBookCfg{
@@ -99,6 +104,7 @@ var RunCmd = &cobra.Command{
 					StickersPath: stickersPath,
 					Delay:        delay,
 					Conn:         nc,
+					OrderBook:    orderbookEm,
 				},
 			)
 			if err != nil {
@@ -128,6 +134,7 @@ var RunCmd = &cobra.Command{
 					AccDir:     accDir,
 					Delay:      delay,
 					Conn:       nc,
+					Listing:    buffListingEm,
 				},
 			)
 			if err != nil {

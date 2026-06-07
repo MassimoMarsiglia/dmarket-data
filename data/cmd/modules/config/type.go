@@ -3,6 +3,9 @@ package config
 import (
 	"time"
 
+	"github.com/MassimoMarsiglia/dmarket-bot/pkg/nats/emitter/buff/listing"
+	newlisting "github.com/MassimoMarsiglia/dmarket-bot/pkg/nats/emitter/dmarket/new_listing"
+	"github.com/MassimoMarsiglia/dmarket-bot/pkg/nats/emitter/dmarket/orderbook"
 	"github.com/nats-io/nats.go"
 	"go.uber.org/zap"
 )
@@ -13,13 +16,15 @@ type BuffListingCfg struct {
 	Enabled    bool          `yaml:"enabled"`
 	Delay      time.Duration `yaml:"delay"`
 	Conn       *nats.Conn
+	Listing    *listing.Emitter
 }
 
 type NewListingCfg struct {
-	AccDir  string        `yaml:"acc_path"`
-	Enabled bool          `yaml:"enabled"`
-	Delay   time.Duration `yaml:"delay"`
-	Conn    *nats.Conn
+	AccDir     string        `yaml:"acc_path"`
+	Enabled    bool          `yaml:"enabled"`
+	Delay      time.Duration `yaml:"delay"`
+	Conn       *nats.Conn
+	NewListing *newlisting.Emitter
 }
 
 type OrderBookCfg struct {
@@ -29,6 +34,7 @@ type OrderBookCfg struct {
 	StickersPath string        `yaml:"stickers_path"`
 	Delay        time.Duration `yaml:"delay"`
 	Conn         *nats.Conn
+	OrderBook    *orderbook.Emitter
 }
 
 type SalesCfg struct {

@@ -36,4 +36,4 @@ main
 data/bin/*
 !data/bin/*.example.json
 !data/bin/*.example.yaml
-
+management

@@ -1,7 +1,6 @@
 package newlisting
 
 import (
-	"encoding/json"
 	"log"
 
 	"go.uber.org/zap"
@@ -23,11 +22,9 @@ func (s *Service) init() error {
 				}
 
 				for _, item := range resp {
-					itemb, err := json.Marshal(item)
-					if err != nil {
-						return
+					if err := s.em.Emit(item); err != nil {
+						s.logger.Error("failed emitting new listing", zap.Error(err))
 					}
-					s.nc.Publish(NATS_KEY, itemb)
 				}
 
 			}()

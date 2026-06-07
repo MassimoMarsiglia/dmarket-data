@@ -6,6 +6,7 @@ import (
 
 	"github.com/MassimoMarsiglia/dmarket-bot/cmd/modules"
 	"github.com/MassimoMarsiglia/dmarket-bot/cmd/modules/config"
+	"github.com/MassimoMarsiglia/dmarket-bot/pkg/nats/emitter/buff/listing"
 	bufflisting "github.com/MassimoMarsiglia/dmarket-bot/pkg/services/scraper/buff/buff_listing"
 	"github.com/nats-io/nats.go"
 	"github.com/spf13/cobra"
@@ -13,23 +14,25 @@ import (
 )
 
 type Module struct {
-	accDir  string
-	mapDir  string
-	enabled bool
-	delay   time.Duration
-	srvc    *bufflisting.Service
-	logger  *zap.Logger
-	nc      *nats.Conn
+	accDir    string
+	mapDir    string
+	enabled   bool
+	delay     time.Duration
+	srvc      *bufflisting.Service
+	logger    *zap.Logger
+	nc        *nats.Conn
+	listingEm *listing.Emitter
 }
 
 func New(logger *zap.Logger, cmd *cobra.Command, cfg config.BuffListingCfg) (*Module, error) {
 	bufflisting := &Module{
-		mapDir:  cfg.MappingDir,
-		logger:  logger,
-		accDir:  cfg.AccDir,
-		enabled: true,
-		delay:   cfg.Delay,
-		nc:      cfg.Conn,
+		mapDir:    cfg.MappingDir,
+		logger:    logger,
+		accDir:    cfg.AccDir,
+		enabled:   true,
+		delay:     cfg.Delay,
+		nc:        cfg.Conn,
+		listingEm: cfg.Listing,
 	}
 	return bufflisting, nil
 }
@@ -55,12 +58,13 @@ func (n *Module) Run(ctx context.Context) error {
 	}
 
 	bufflistingSvc, err := bufflisting.New(bufflisting.ServiceCfg{
-		Conn:    n.nc,
-		Delay:   n.delay,
-		Context: context.Background(),
-		Logger:  n.logger,
-		AccDir:  &n.accDir,
-		MapDir:  n.mapDir,
+		Conn:      n.nc,
+		ListingEm: n.listingEm,
+		Delay:     n.delay,
+		Context:   context.Background(),
+		Logger:    n.logger,
+		AccDir:    &n.accDir,
+		MapDir:    n.mapDir,
 	})
 	if err != nil {
 		return err

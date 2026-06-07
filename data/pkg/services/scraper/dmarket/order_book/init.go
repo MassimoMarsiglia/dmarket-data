@@ -1,7 +1,6 @@
 package order_book
 
 import (
-	"encoding/json"
 	"log"
 
 	"go.uber.org/zap"
@@ -32,11 +31,9 @@ func (s *Service) init() error {
 				}
 
 				for _, item := range resp {
-					itemb, err := json.Marshal(item)
-					if err != nil {
-						return
+					if err := s.em.Emit(item); err != nil {
+						s.logger.Error("failed emitting orderbook", zap.Error(err))
 					}
-					s.nc.Publish(NATS_KEY, itemb)
 				}
 
 			}()

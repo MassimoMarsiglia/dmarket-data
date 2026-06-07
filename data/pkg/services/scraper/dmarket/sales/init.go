@@ -1,7 +1,6 @@
 package sales
 
 import (
-	"encoding/json"
 	"log"
 
 	"github.com/MassimoMarsiglia/dmarket-bot/pkg/client/dmarket"
@@ -49,11 +48,9 @@ func (s *Service) init() error {
 				}
 
 				for _, item := range resp {
-					itemb, err := json.Marshal(item)
-					if err != nil {
-						return
+					if err := s.em.Emit(item); err != nil {
+						s.logger.Error("failed emitting sale", zap.Error(err))
 					}
-					s.nc.Publish(NATS_KEY, itemb)
 				}
 
 			}()

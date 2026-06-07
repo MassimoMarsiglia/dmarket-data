@@ -5,6 +5,7 @@ import "time"
 type BuyOrder struct {
 	Market         MarketType      `json:"market"`
 	MarketHashName string          `json:"market_hash_name"`
+	SkinID         string          `json:"skin_id"`
 	Depth          int             `json:"depth"`
 	FloatPartValue *FloatPartValue `json:"float_part_value"`
 	Phase          *Phase          `json:"phase"`

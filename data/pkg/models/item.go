@@ -6,6 +6,7 @@ type (
 	Item struct {
 		Market         MarketType      `json:"market"`
 		MarketHashName string          `json:"market_hash_name"`
+		SkinID         string          `json:"skin_id"`
 		Image          string          `json:"image_url"`
 		Price          int64           `json:"price"`
 		Owner          *Owner          `json:"owner"`

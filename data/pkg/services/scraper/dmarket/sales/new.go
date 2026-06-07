@@ -20,6 +20,7 @@ func New(cfg ServiceCfg) (*Service, error) {
 
 	svc := &Service{
 		nc:      cfg.Conn,
+		em:      cfg.SalesEm,
 		clients: clients,
 		context: cfg.Context,
 		ticker:  time.NewTicker(cfg.Delay),
