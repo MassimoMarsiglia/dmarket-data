@@ -26,6 +26,7 @@ func init() {
 	NewListing.InitFlags(RunCmd)
 	orderbook.InitFlags(RunCmd)
 	bufflisting.InitFlags(RunCmd)
+	// sales.InitFlags(RunCmd)
 }
 
 // rootCmd represents the base command when called without any subcommands

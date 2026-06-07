@@ -145,6 +145,32 @@ var RunCmd = &cobra.Command{
 			buffListingModule.Run(context.Background())
 		}
 
+		// if cfg.Dmarket.Sales.Enabled {
+		// 	accDir := cfg.Dmarket.Sales.AccDir
+		// 	itemDir := cfg.Dmarket.Sales.ItemDir
+		// 	delay, err := cmd.Flags().GetDuration("dmarket.sales.delay")
+		// 	if err != nil {
+		// 		return err
+		// 	}
+		// 	logger.Debug("starting with:", zap.Duration("dmarket sales poll delay:", delay))
+		// 	lgr := logger.With(zap.String("source", "dmarket.sales"))
+
+		// 	// salesModule, err := sales.New(
+		// 	// 	lgr,
+		// 	// 	cmd,
+		// 	// 	config.SalesCfg{
+		// 	// 		ItemDir: itemDir,
+		// 	// 		AccDir:  accDir,
+		// 	// 		Delay:   delay,
+		// 	// 		Conn:    nc,
+		// 	// 	},
+		// 	// )
+		// 	// if err != nil {
+		// 	// 	return err
+		// 	// }
+		// 	// salesModule.Run(context.Background())
+		// }
+
 		fmt.Println("running... press Ctrl+C to exit")
 
 		<-ctx.Done() // wait for shutdown signal

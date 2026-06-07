@@ -1,20 +1,12 @@
 package dmarket
 
 import (
-	"encoding/hex"
-	"errors"
-	"fmt"
-	"net/http"
-	"net/url"
-
 	"go.uber.org/zap"
 )
 
 const (
 	DMarketURL = "https://api.dmarket.com/"
 )
-
-var ErrFailedToParse = errors.New("failed to parse")
 
 type DmarketCfg struct {
 	Logger  *zap.Logger
@@ -27,33 +19,20 @@ func NewDmarketClient(cfg DmarketCfg) (*ClientWithResponses, error) {
 	opts := []ClientOption{}
 
 	if cfg.SecKey != nil && cfg.PrivKey != nil {
-
-		privHex := hex.EncodeToString([]byte(*cfg.PrivKey))
-		pubHex := hex.EncodeToString([]byte(*cfg.SecKey))
-
-		auth, err := NewDmarketAuth(
-			privHex,
-			pubHex,
-		)
+		opt, err := WithAuth(*cfg.PrivKey, *cfg.SecKey)
 		if err != nil {
 			return nil, err
 		}
-		opts = append(opts, WithRequestEditorFn(auth.Middleware()))
+		opts = append(opts, opt)
 	}
 
 	if cfg.Proxy != nil {
-		proxyUrl, err := url.Parse(*cfg.Proxy)
+		opt, err := WithProxy(*cfg.Proxy)
 		if err != nil {
-			return nil, fmt.Errorf("%w proxy url %s", ErrFailedToParse, *cfg.Proxy)
+			return nil, err
 		}
-		opts = append(opts, WithHTTPClient(
-			&http.Client{
-				Transport: &http.Transport{
-					MaxIdleConnsPerHost: 10,
-					Proxy:               http.ProxyURL(proxyUrl),
-				},
-			},
-		))
+		opts = append(opts, opt)
 	}
+
 	return NewClientWithResponses(DMarketURL, opts...)
 }

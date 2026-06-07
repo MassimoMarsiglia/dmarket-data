@@ -35,27 +35,42 @@ func ParsePhase(market MarketType, input string) (Phase, error) {
 	return utils.ParseIotas[Phase](input, _Phase_name, _Phase_index[:])
 }
 
+var phaseBuffMap = map[Phase]string{
+	Doppler_Phase1:     "P1",
+	Doppler_Phase2:     "P2",
+	Doppler_Phase3:     "P3",
+	Doppler_Phase4:     "P4",
+	Doppler_Sapphire:   "Sapphire",
+	Doppler_Ruby:       "Ruby",
+	Doppler_Emerald:    "Emerald",
+	Doppler_BlackPearl: "Black_Pearl",
+}
+
+var buffPhaseMap = map[string]Phase{
+	"P1":          Doppler_Phase1,
+	"P2":          Doppler_Phase2,
+	"P3":          Doppler_Phase3,
+	"P4":          Doppler_Phase4,
+	"Sapphire":    Doppler_Sapphire,
+	"Ruby":        Doppler_Ruby,
+	"Emerald":     Doppler_Emerald,
+	"Black_Pearl": Doppler_BlackPearl,
+}
+
 func parsePhaseBuff(input string) Phase {
-	switch input {
-	case "P1":
-		return Doppler_Phase1
-	case "P2":
-		return Doppler_Phase2
-	case "P3":
-		return Doppler_Phase3
-	case "P4":
-		return Doppler_Phase4
-	case "Sapphire":
-		return Doppler_Sapphire
-	case "Ruby":
-		return Doppler_Ruby
-	case "Emerald":
-		return Doppler_Emerald
-	case "Black_Pearl":
-		return Doppler_BlackPearl
-	default:
+	phase, ok := buffPhaseMap[input]
+	if !ok {
 		return Doppler_Unknown
 	}
+	return phase
+}
+
+func (p Phase) BuffString() string {
+	phaseStr, ok := phaseBuffMap[p]
+	if !ok {
+		return ""
+	}
+	return phaseStr
 }
 
 func (p Phase) MarshalJSON() ([]byte, error) {

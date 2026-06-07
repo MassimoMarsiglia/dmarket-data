@@ -30,6 +30,14 @@ type OrderBookCfg struct {
 	Delay   time.Duration
 }
 
+type SalesCfg struct {
+	AccDir  string `yaml:"acc_path"`
+	Enabled bool   `yaml:"enabled"`
+	ItemDir string `yaml:"item_path"`
+	Conn    *nats.Conn
+	Delay   time.Duration
+}
+
 type Config[T any] struct {
 	logger *zap.Logger
 	path   string
@@ -47,4 +55,5 @@ type BuffConfig struct {
 type DmarketConfig struct {
 	NewListing NewListingCfg `yaml:"NewListing"`
 	OrderBook  OrderBookCfg  `yaml:"OrderBook"`
+	Sales      SalesCfg      `yaml:"Sales"`
 }

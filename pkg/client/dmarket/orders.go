@@ -119,16 +119,14 @@ Transform:
 				UpdatedAt:      time.Now(),
 			}
 
-			for i := range filters {
-				filter := filters[i]
-				ok, err := filter(order)
-				if err != nil {
-					return nil, err
-				}
-				if !ok {
-					continue Transform
-				}
+			ok, err := applyFilters[models.BuyOrder](order, filters)
+			if err != nil {
+				return nil, err
 			}
+			if !ok {
+				continue Transform
+			}
+
 			orders = append(orders, order)
 		}
 	}

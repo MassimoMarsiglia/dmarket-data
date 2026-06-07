@@ -97,7 +97,7 @@ Transform:
 		}
 
 		i := models.Item{
-			MarketType:     marketPlace,
+			Market:         marketPlace,
 			MarketHashName: marketHashName,
 			Image:          item.AssetInfo.Info.IconUrl,
 			Price:          int64(price),

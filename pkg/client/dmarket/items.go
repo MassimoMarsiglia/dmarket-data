@@ -10,6 +10,20 @@ import (
 
 type FilterFunc[T any] func(T) (bool, error)
 
+func applyFilters[T any](item T, filters []FilterFunc[T]) (bool, error) {
+	for i := range filters {
+		filter := filters[i]
+		ok, err := filter(item)
+		if err != nil {
+			return false, err
+		}
+		if !ok {
+			return false, nil
+		}
+	}
+	return true, nil
+}
+
 func PriceIDFilter() FilterFunc[models.Item] {
 	mu := sync.Mutex{}
 	seenItems := make(map[string]int64)
@@ -55,7 +69,7 @@ Transform:
 		}
 
 		i := models.Item{
-			MarketType:     models.DMARKET,
+			Market:         models.DMARKET,
 			MarketHashName: item.Title,
 			Image:          item.Image,
 			Price:          price,
@@ -87,21 +101,21 @@ Transform:
 
 		rawPhase := item.Extra.Phase
 		if rawPhase != nil {
-			phase, err := models.ParsePhase(i.MarketType, string(*rawPhase))
+			phase, err := models.ParsePhase(i.Market, string(*rawPhase))
 			if err != nil {
 				return nil, err
 			}
 			i.Phase = &phase
 		}
-		for _, filter := range filters {
-			ok, err := filter(i)
-			if err != nil {
-				return nil, err
-			}
-			if !ok {
-				continue Transform
-			}
+
+		ok, err := applyFilters[models.Item](i, filters)
+		if err != nil {
+			return nil, err
 		}
+		if !ok {
+			continue Transform
+		}
+
 		items = append(items, i)
 	}
 	return items, nil

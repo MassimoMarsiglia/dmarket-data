@@ -15,6 +15,21 @@ import (
 
 var ErrFailedToDecode = errors.New("failed to decode")
 
+func WithAuth(privKey, secKey string) (ClientOption, error) {
+	privHex := hex.EncodeToString([]byte(privKey))
+	pubHex := hex.EncodeToString([]byte(secKey))
+
+	auth, err := NewDmarketAuth(
+		privHex,
+		pubHex,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return WithRequestEditorFn(auth.Middleware()), nil
+}
+
 func NewDmarketAuth(privKeyHex, pubKeyHex string) (*DmarketAuth, error) {
 	privKey, err := hex.DecodeString(privKeyHex)
 	if err != nil {

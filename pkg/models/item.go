@@ -4,7 +4,7 @@ import "time"
 
 type (
 	Item struct {
-		MarketType     MarketType      `json:"market"`
+		Market         MarketType      `json:"market"`
 		MarketHashName string          `json:"market_hash_name"`
 		Image          string          `json:"image_url"`
 		Price          int64           `json:"price"`
