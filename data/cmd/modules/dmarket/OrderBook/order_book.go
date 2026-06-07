@@ -13,23 +13,25 @@ import (
 )
 
 type Module struct {
-	itemDir string
-	accDir  string
-	enabled bool
-	delay   time.Duration
-	srvc    *order_book.Service
-	logger  *zap.Logger
-	nc      *nats.Conn
+	skinsPath    string
+	stickersPath string
+	accDir       string
+	enabled      bool
+	delay        time.Duration
+	srvc         *order_book.Service
+	logger       *zap.Logger
+	nc           *nats.Conn
 }
 
 func New(logger *zap.Logger, cmd *cobra.Command, cfg config.OrderBookCfg) (*Module, error) {
 	orderBook := &Module{
-		logger:  logger,
-		accDir:  cfg.AccDir,
-		itemDir: cfg.ItemDir,
-		enabled: true,
-		delay:   cfg.Delay,
-		nc:      cfg.Conn,
+		logger:       logger,
+		accDir:       cfg.AccDir,
+		skinsPath:    cfg.SkinsPath,
+		stickersPath: cfg.StickersPath,
+		enabled:      true,
+		delay:        cfg.Delay,
+		nc:           cfg.Conn,
 	}
 	return orderBook, nil
 }
@@ -55,12 +57,13 @@ func (m *Module) Run(ctx context.Context) error {
 	}
 
 	orderBookSvc, err := order_book.New(order_book.ServiceCfg{
-		Conn:    m.nc,
-		ItemDir: m.itemDir,
-		Delay:   m.delay,
-		Context: context.Background(),
-		Logger:  m.logger,
-		AccDir:  &m.accDir,
+		Conn:         m.nc,
+		SkinsPath:    m.skinsPath,
+		StickersPath: m.stickersPath,
+		Delay:        m.delay,
+		Context:      context.Background(),
+		Logger:       m.logger,
+		AccDir:       &m.accDir,
 	})
 	if err != nil {
 		return err

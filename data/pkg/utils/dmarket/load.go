@@ -3,7 +3,6 @@ package dmarket_utils
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
 	"os"
 
@@ -64,16 +63,16 @@ func LoadDmarketAccounts(logger *zap.Logger, accDir *string, cfgs []dmarket.Dmar
 	return &clients, nil
 }
 
-func LoadDmarketOrderBookQueue(logger *zap.Logger, dir string) (*deque.Deque[*dmarket.GetOrderBookParams], error) {
+func LoadDmarketOrderBookQueue(logger *zap.Logger, skinsPath, stickersPath string) (*deque.Deque[*dmarket.GetOrderBookParams], error) {
 	logger.Debug("Filling order book request queue...")
 	var reqs deque.Deque[*dmarket.GetOrderBookParams]
 
-	skins, err := loadSkinsNotGrouped(dir)
+	skins, err := loadSkinsNotGrouped(skinsPath)
 	if err != nil {
 		return nil, err
 	}
 
-	stickers, err := loadStickers(dir)
+	stickers, err := loadStickers(stickersPath)
 	if err != nil {
 		return nil, err
 	}
@@ -102,8 +101,7 @@ func LoadDmarketOrderBookQueue(logger *zap.Logger, dir string) (*deque.Deque[*dm
 	return &reqs, nil
 }
 
-func loadStickers(dir string) ([]CS2Models.Sticker, error) {
-	path := fmt.Sprintf("%s/stickers.json", dir)
+func loadStickers(path string) ([]CS2Models.Sticker, error) {
 	reader, err := os.Open(path)
 	if err != nil {
 		return nil, err
@@ -121,13 +119,11 @@ func loadStickers(dir string) ([]CS2Models.Sticker, error) {
 	return stickers, nil
 }
 
-func loadSkinsNotGrouped(dir string) ([]CS2Models.SkinNotGrouped, error) {
-	path := fmt.Sprintf("%s/skins_not_grouped.json", dir)
+func loadSkinsNotGrouped(path string) ([]CS2Models.SkinNotGrouped, error) {
 	reader, err := os.Open(path)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("%s \n", path)
 	defer reader.Close()
 	data, err := io.ReadAll(reader)
 

@@ -3,7 +3,6 @@ package order_book
 import (
 	"context"
 	"errors"
-	"sync"
 	"time"
 
 	"github.com/MassimoMarsiglia/dmarket-bot/pkg/client/dmarket"
@@ -20,13 +19,14 @@ const NATS_KEY = "dmarket.orderbook"
 
 type (
 	ServiceCfg struct {
-		Conn        *nats.Conn
-		DmarketCfgs []dmarket.DmarketCfg
-		Delay       time.Duration
-		Context     context.Context
-		Logger      *zap.Logger
-		AccDir      *string
-		ItemDir     string
+		Conn         *nats.Conn
+		DmarketCfgs  []dmarket.DmarketCfg
+		Delay        time.Duration
+		Context      context.Context
+		Logger       *zap.Logger
+		AccDir       *string
+		SkinsPath    string
+		StickersPath string
 	}
 
 	Service struct {
@@ -37,7 +37,6 @@ type (
 		clients *deque.Deque[*dmarket.ClientWithResponses]
 		queue   *deque.Deque[*dmarket.GetOrderBookParams]
 
-		mu     sync.Mutex
 		ticker *time.Ticker
 	}
 )

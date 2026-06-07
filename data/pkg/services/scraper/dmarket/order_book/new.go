@@ -17,7 +17,7 @@ func New(cfg ServiceCfg) (*Service, error) {
 	if err != nil {
 		return nil, err
 	}
-	queue, err := dmarket_utils.LoadDmarketOrderBookQueue(cfg.Logger, cfg.ItemDir)
+	queue, err := dmarket_utils.LoadDmarketOrderBookQueue(cfg.Logger, cfg.SkinsPath, cfg.StickersPath)
 	if err != nil {
 		return nil, err
 	}

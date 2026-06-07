@@ -26,7 +26,6 @@ type (
 		Context     context.Context
 		Logger      *zap.Logger
 		AccDir      *string
-		ItemDir     string
 	}
 
 	Service struct {

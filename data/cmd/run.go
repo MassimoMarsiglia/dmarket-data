@@ -77,7 +77,8 @@ var RunCmd = &cobra.Command{
 
 		if cfg.Dmarket.OrderBook.Enabled {
 			accDir := cfg.Dmarket.OrderBook.AccDir
-			itemDir := cfg.Dmarket.OrderBook.ItemDir
+			skinsPath := cfg.Dmarket.OrderBook.SkinsPath
+			stickersPath := cfg.Dmarket.OrderBook.StickersPath
 			delay := cfg.Dmarket.OrderBook.Delay
 			if cmd.Flags().Changed("dmarket.orderbook.delay") {
 				delay, err = cmd.Flags().GetDuration("dmarket.orderbook.delay")
@@ -93,10 +94,11 @@ var RunCmd = &cobra.Command{
 				lgr,
 				cmd,
 				config.OrderBookCfg{
-					ItemDir: itemDir,
-					AccDir:  accDir,
-					Delay:   delay,
-					Conn:    nc,
+					AccDir:       accDir,
+					SkinsPath:    skinsPath,
+					StickersPath: stickersPath,
+					Delay:        delay,
+					Conn:         nc,
 				},
 			)
 			if err != nil {

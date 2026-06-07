@@ -6,12 +6,14 @@ Dmarket:
   OrderBook:
     enabled: true
     acc_path: "./bin/accs.example.json"
-    item_path: "./bin"
+    skins_path: "./bin/csgo_gloves_knives_reds.json"
+    stickers_path: "./bin/stickers.json"
     delay: 100ms
   Sales:
     enabled: false
     acc_path: "./bin/accs.example.json"
-    item_path: "./bin"
+    skins_path: "./bin/skins_not_grouped.json"
+    stickers_path: "./bin/stickers.json"
     delay: 100ms
 Buff:
   Listing:

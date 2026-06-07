@@ -40,8 +40,6 @@ cp bin/cfg.example.yaml bin/cfg.yaml
 
 Controls which scrapers run and their settings:
 
-Controls which scrapers run and their settings:
-
 ```yaml
 Dmarket:
   NewListing:
@@ -51,7 +49,8 @@ Dmarket:
   OrderBook:
     enabled: true
     acc_path: "./accs.json"
-    item_path: "./bin"
+    skins_path: "./bin/skins_not_grouped.json"
+    stickers_path: "./bin/stickers.json"
     delay: 100ms
 Buff:
   Listing:

@@ -23,19 +23,21 @@ type NewListingCfg struct {
 }
 
 type OrderBookCfg struct {
-	AccDir  string        `yaml:"acc_path"`
-	Enabled bool          `yaml:"enabled"`
-	ItemDir string        `yaml:"item_path"`
-	Delay   time.Duration `yaml:"delay"`
-	Conn    *nats.Conn
+	AccDir       string        `yaml:"acc_path"`
+	Enabled      bool          `yaml:"enabled"`
+	SkinsPath    string        `yaml:"skins_path"`
+	StickersPath string        `yaml:"stickers_path"`
+	Delay        time.Duration `yaml:"delay"`
+	Conn         *nats.Conn
 }
 
 type SalesCfg struct {
-	AccDir  string        `yaml:"acc_path"`
-	Enabled bool          `yaml:"enabled"`
-	ItemDir string        `yaml:"item_path"`
-	Delay   time.Duration `yaml:"delay"`
-	Conn    *nats.Conn
+	AccDir       string        `yaml:"acc_path"`
+	Enabled      bool          `yaml:"enabled"`
+	SkinsPath    string        `yaml:"skins_path"`
+	StickersPath string        `yaml:"stickers_path"`
+	Delay        time.Duration `yaml:"delay"`
+	Conn         *nats.Conn
 }
 
 type Config[T any] struct {
