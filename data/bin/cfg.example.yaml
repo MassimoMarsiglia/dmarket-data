@@ -21,3 +21,6 @@ Buff:
     acc_path: "./bin/proxy.json"
     mapping_path: "./bin/cs2_marketplaceids.json"
     delay: 100ms
+Lookup:
+  skins_path: "./bin/skins_not_grouped.json"
+  stickers_path: "./bin/stickers.json"

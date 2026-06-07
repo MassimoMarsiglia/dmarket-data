@@ -15,8 +15,6 @@ type Application struct {
 	modules []modules.Module
 }
 
-var cfg config.Config[config.BotConfig]
-
 func init() {
 	// Enable the built-in `completion` command
 	rootCmd.CompletionOptions.DisableDefaultCmd = false
