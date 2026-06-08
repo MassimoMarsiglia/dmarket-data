@@ -36,4 +36,10 @@ main
 data/bin/*
 !data/bin/*.example.json
 !data/bin/*.example.yaml
+
+# TypeScript consumer
+consumer/node_modules/
+consumer/dist/
+consumer/src/types/events.ts
+consumer/types/
 management

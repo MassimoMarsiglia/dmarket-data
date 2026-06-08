@@ -1,0 +1,22 @@
+{
+  "name": "dmarket-consumer",
+  "version": "1.0.0",
+  "description": "NATS event consumer for dmarket-data",
+  "type": "module",
+  "scripts": {
+    "generate-types": "openapi-typescript types/dmarket-events.yaml -o src/types/events.ts",
+    "build": "tsc",
+    "start": "node --import=tsx src/index.ts",
+    "dev": "tsx src/index.ts"
+  },
+  "dependencies": {
+    "js-yaml": "^4.2.0",
+    "nats": "^2.21.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.2",
+    "openapi-typescript": "^7.13.0",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2"
+  }
+}

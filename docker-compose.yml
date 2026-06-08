@@ -5,7 +5,7 @@ services:
     ports:
       - "4222:4222"
 
-  app:
+  data:
     build:
       context: ./data
       dockerfile: Dockerfile
@@ -16,3 +16,13 @@ services:
       - NATS_URL=nats://nats:4222
     volumes:
       - ./data/bin:/app/bin:ro
+
+  consumer:
+    build:
+      context: ./consumer
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - nats
+    environment:
+      - NATS_URL=nats://nats:4222
