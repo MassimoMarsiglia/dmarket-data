@@ -24,3 +24,11 @@ Buff:
 Lookup:
   skins_path: "./bin/skins_not_grouped.json"
   stickers_path: "./bin/stickers.json"
+  agents_path: "./bin/cs2/agents.json"
+  graffiti_path: "./bin/cs2/graffiti.json"
+  crates_path: "./bin/cs2/crates.json"
+  keychains_path: "./bin/cs2/keychains.json"
+  music_kits_path: "./bin/cs2/music_kits.json"
+  patches_path: "./bin/cs2/patches.json"
+  sticker_slabs_path: "./bin/cs2/sticker_slabs.json"
+  collectibles_path: "./bin/cs2/collectibles.json"

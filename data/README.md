@@ -108,9 +108,44 @@ Each entry represents a sticker with rarity and metadata.
 
 Marketplace ID mappings (required for BUFF order book scraping).
 
+### Lookup Configuration
+
+The `Lookup` section in `cfg.yaml` defines paths to all CS2 data files used to build the item lookup table:
+
+```yaml
+Lookup:
+  skins_path: "./bin/skins_not_grouped.json"
+  stickers_path: "./bin/stickers.json"
+  agents_path: "./bin/cs2/agents.json"
+  graffiti_path: "./bin/cs2/graffiti.json"
+  crates_path: "./bin/cs2/crates.json"
+  keychains_path: "./bin/cs2/keychains.json"
+  music_kits_path: "./bin/cs2/music_kits.json"
+  patches_path: "./bin/cs2/patches.json"
+  sticker_slabs_path: "./bin/cs2/sticker_slabs.json"
+  collectibles_path: "./bin/cs2/collectibles.json"
+```
+
+Items are keyed by `market_hash_name` (falling back to `name` when unavailable).
+
+### bin/cs2/
+
+CS2 item definitions sourced from [CSGO-API](https://github.com/ByMykel/CSGO-API):
+
+| File | Description |
+|------|-------------|
+| `agents.json` | Agent characters with rarity and team info |
+| `crates.json` | Weapon cases, souvenir packages, and capsules |
+| `graffiti.json` | Spray patterns and designs |
+| `keychains.json` | Weapon charms |
+| `music_kits.json` | Music kits with MVP anthems |
+| `patches.json` | Agent patches |
+| `sticker_slabs.json` | Sealed sticker packs |
+| `collectibles.json` | Commemorative coins, medals, and trophies |
+
 ### Data Sources
 
-Skin and sticker data can be obtained from the [CSGO-API](https://github.com/ByMykel/CSGO-API) repository, which provides comprehensive CS2 item definitions.
+Skin, sticker, and all CS2 item definitions can be obtained from the [CSGO-API](https://github.com/ByMykel/CSGO-API) repository, which provides comprehensive CS2 item definitions.
 
 ## Running with Docker
 

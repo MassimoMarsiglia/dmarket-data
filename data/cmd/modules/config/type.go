@@ -52,8 +52,16 @@ type Config[T any] struct {
 }
 
 type LookupCfg struct {
-	SkinsPath    string `yaml:"skins_path"`
-	StickersPath string `yaml:"stickers_path"`
+	SkinsPath        string `yaml:"skins_path"`
+	StickersPath     string `yaml:"stickers_path"`
+	AgentsPath       string `yaml:"agents_path"`
+	GraffitiPath     string `yaml:"graffiti_path"`
+	CratesPath       string `yaml:"crates_path"`
+	KeychainsPath    string `yaml:"keychains_path"`
+	MusicKitsPath    string `yaml:"music_kits_path"`
+	PatchesPath      string `yaml:"patches_path"`
+	StickerSlabsPath string `yaml:"sticker_slabs_path"`
+	CollectiblesPath string `yaml:"collectibles_path"`
 }
 
 type BotConfig struct {

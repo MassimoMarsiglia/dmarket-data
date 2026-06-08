@@ -19,6 +19,23 @@ type Category struct {
 	Name string `json:"name"`
 }
 
+// Collectible defines model for Collectible.
+type Collectible struct {
+	DefIndex       string  `json:"def_index"`
+	Description    string  `json:"description"`
+	Genuine        bool    `json:"genuine"`
+	Id             string  `json:"id"`
+	Image          string  `json:"image"`
+	MarketHashName *string `json:"market_hash_name,omitempty"`
+	Name           string  `json:"name"`
+	Original       *struct {
+		ImageInventory *string `json:"image_inventory,omitempty"`
+		ItemName       *string `json:"item_name,omitempty"`
+	} `json:"original,omitempty"`
+	Rarity Rarity  `json:"rarity"`
+	Type   *string `json:"type,omitempty"`
+}
+
 // Collection defines model for Collection.
 type Collection struct {
 	Id    string `json:"id"`
@@ -43,6 +60,22 @@ type CrateRef struct {
 	Name  string `json:"name"`
 }
 
+// Graffiti defines model for Graffiti.
+type Graffiti struct {
+	Crates         *[]CrateRef `json:"crates,omitempty"`
+	DefIndex       string      `json:"def_index"`
+	Description    string      `json:"description"`
+	Id             string      `json:"id"`
+	Image          string      `json:"image"`
+	MarketHashName string      `json:"market_hash_name"`
+	Name           string      `json:"name"`
+	Original       *struct {
+		ImageInventory *string `json:"image_inventory,omitempty"`
+		Name           *string `json:"name,omitempty"`
+	} `json:"original,omitempty"`
+	Rarity Rarity `json:"rarity"`
+}
+
 // Item defines model for Item.
 type Item struct {
 	Id   string `json:"id"`
@@ -57,6 +90,37 @@ type Keychain struct {
 	MarketHashName string `json:"market_hash_name"`
 	Name           string `json:"name"`
 	Rarity         Rarity `json:"rarity"`
+}
+
+// MusicKit defines model for MusicKit.
+type MusicKit struct {
+	DefIndex       string  `json:"def_index"`
+	Description    string  `json:"description"`
+	Exclusive      bool    `json:"exclusive"`
+	Id             string  `json:"id"`
+	Image          string  `json:"image"`
+	MarketHashName *string `json:"market_hash_name,omitempty"`
+	Name           string  `json:"name"`
+	Original       *struct {
+		ImageInventory *string `json:"image_inventory,omitempty"`
+		Name           *string `json:"name,omitempty"`
+	} `json:"original,omitempty"`
+	Rarity Rarity `json:"rarity"`
+}
+
+// Patch defines model for Patch.
+type Patch struct {
+	DefIndex       string `json:"def_index"`
+	Description    string `json:"description"`
+	Id             string `json:"id"`
+	Image          string `json:"image"`
+	MarketHashName string `json:"market_hash_name"`
+	Name           string `json:"name"`
+	Original       *struct {
+		ImageInventory *string `json:"image_inventory,omitempty"`
+		Name           *string `json:"name,omitempty"`
+	} `json:"original,omitempty"`
+	Rarity Rarity `json:"rarity"`
 }
 
 // Pattern defines model for Pattern.
@@ -138,6 +202,29 @@ type Sticker struct {
 	MarketHashName string  `json:"market_hash_name"`
 	Name           string  `json:"name"`
 	Rarity         *Rarity `json:"rarity,omitempty"`
+}
+
+// StickerSlab defines model for StickerSlab.
+type StickerSlab struct {
+	Collections    *[]Collection `json:"collections,omitempty"`
+	Crates         *[]CrateRef   `json:"crates,omitempty"`
+	DefIndex       string        `json:"def_index"`
+	Description    string        `json:"description"`
+	Effect         string        `json:"effect"`
+	Id             string        `json:"id"`
+	Image          string        `json:"image"`
+	MarketHashName *string       `json:"market_hash_name,omitempty"`
+	Name           string        `json:"name"`
+	Original       *struct {
+		ImageInventory *string `json:"image_inventory,omitempty"`
+		Name           *string `json:"name,omitempty"`
+	} `json:"original,omitempty"`
+	Rarity     Rarity `json:"rarity"`
+	Tournament *struct {
+		Id   *int    `json:"id,omitempty"`
+		Name *string `json:"name,omitempty"`
+	} `json:"tournament,omitempty"`
+	Type string `json:"type"`
 }
 
 // Weapon defines model for Weapon.

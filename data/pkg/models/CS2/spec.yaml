@@ -281,3 +281,198 @@ components:
           type: string
         image:
           type: string
+
+    Graffiti:
+      type: object
+      required:
+        - id
+        - name
+        - description
+        - def_index
+        - rarity
+        - market_hash_name
+        - image
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        def_index:
+          type: string
+        rarity:
+          $ref: "#/components/schemas/Rarity"
+        crates:
+          type: array
+          items:
+            $ref: "#/components/schemas/CrateRef"
+        market_hash_name:
+          type: string
+        image:
+          type: string
+        original:
+          type: object
+          properties:
+            name:
+              type: string
+            image_inventory:
+              type: string
+
+    MusicKit:
+      type: object
+      required:
+        - id
+        - name
+        - description
+        - def_index
+        - rarity
+        - exclusive
+        - image
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        def_index:
+          type: string
+        rarity:
+          $ref: "#/components/schemas/Rarity"
+        market_hash_name:
+          type: string
+        exclusive:
+          type: boolean
+        image:
+          type: string
+        original:
+          type: object
+          properties:
+            name:
+              type: string
+            image_inventory:
+              type: string
+
+    Patch:
+      type: object
+      required:
+        - id
+        - name
+        - description
+        - def_index
+        - rarity
+        - market_hash_name
+        - image
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        def_index:
+          type: string
+        rarity:
+          $ref: "#/components/schemas/Rarity"
+        market_hash_name:
+          type: string
+        image:
+          type: string
+        original:
+          type: object
+          properties:
+            name:
+              type: string
+            image_inventory:
+              type: string
+
+    StickerSlab:
+      type: object
+      required:
+        - id
+        - name
+        - description
+        - def_index
+        - rarity
+        - type
+        - effect
+        - image
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        def_index:
+          type: string
+        rarity:
+          $ref: "#/components/schemas/Rarity"
+        crates:
+          type: array
+          items:
+            $ref: "#/components/schemas/CrateRef"
+        collections:
+          type: array
+          items:
+            $ref: "#/components/schemas/Collection"
+        type:
+          type: string
+        market_hash_name:
+          type: string
+        effect:
+          type: string
+        tournament:
+          type: object
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+        image:
+          type: string
+        original:
+          type: object
+          properties:
+            name:
+              type: string
+            image_inventory:
+              type: string
+
+    Collectible:
+      type: object
+      required:
+        - id
+        - name
+        - description
+        - def_index
+        - rarity
+        - genuine
+        - image
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        def_index:
+          type: string
+        rarity:
+          $ref: "#/components/schemas/Rarity"
+        type:
+          type: string
+        genuine:
+          type: boolean
+        market_hash_name:
+          type: string
+        image:
+          type: string
+        original:
+          type: object
+          properties:
+            item_name:
+              type: string
+            image_inventory:
+              type: string

@@ -13,7 +13,7 @@ import (
 	orderbookmod "github.com/MassimoMarsiglia/dmarket-bot/cmd/modules/dmarket/OrderBook"
 	"github.com/MassimoMarsiglia/dmarket-bot/pkg/nats"
 	"github.com/MassimoMarsiglia/dmarket-bot/pkg/nats/emitter/buff/listing"
-	"github.com/MassimoMarsiglia/dmarket-bot/pkg/nats/emitter/dmarket/new_listing"
+	newlisting "github.com/MassimoMarsiglia/dmarket-bot/pkg/nats/emitter/dmarket/new_listing"
 	emorderbook "github.com/MassimoMarsiglia/dmarket-bot/pkg/nats/emitter/dmarket/orderbook"
 	"github.com/MassimoMarsiglia/dmarket-bot/pkg/nats/emitter/dmarket/sales"
 	"github.com/MassimoMarsiglia/dmarket-bot/pkg/utils/cs2"
@@ -47,7 +47,18 @@ var RunCmd = &cobra.Command{
 			return err
 		}
 
-		lookup, err := cs2.LoadLookupTable(cfg.Lookup.SkinsPath, cfg.Lookup.StickersPath)
+		lookup, err := cs2.LoadLookupTable(
+			cfg.Lookup.SkinsPath,
+			cfg.Lookup.StickersPath,
+			cfg.Lookup.AgentsPath,
+			cfg.Lookup.GraffitiPath,
+			cfg.Lookup.CratesPath,
+			cfg.Lookup.KeychainsPath,
+			cfg.Lookup.MusicKitsPath,
+			cfg.Lookup.PatchesPath,
+			cfg.Lookup.StickerSlabsPath,
+			cfg.Lookup.CollectiblesPath,
+		)
 		if err != nil {
 			return err
 		}
