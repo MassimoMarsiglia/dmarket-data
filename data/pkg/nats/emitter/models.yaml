@@ -1,0 +1,228 @@
+openapi: "3.0.3"
+info:
+  title: CS2 bot Models
+  version: "1.0.0"
+components:
+  schemas:
+    ItemOwner:
+      type: object
+      description: Optional owner info
+      properties:
+        owner_id:
+          type: string
+        wallet_id:
+          type: string
+
+    FloatPartValue:
+      type: string
+      enum:
+        - UNKNOWN
+        - BS-0
+        - BS-1
+        - BS-2
+        - BS-3
+        - BS-4
+        - FN-0
+        - FN-1
+        - FN-2
+        - FN-3
+        - FN-4
+        - FN-5
+        - FN-6
+        - FT-0
+        - FT-1
+        - FT-2
+        - FT-3
+        - FT-4
+        - MW-0
+        - MW-1
+        - MW-2
+        - MW-3
+        - MW-4
+        - WW-0
+        - WW-1
+        - WW-2
+        - WW-3
+        - WW-4
+    Phase:
+      type: string
+      description: Doppler phase variant.
+      enum:
+        - UNKNOWN
+        - NONE
+        - black-pearl
+        - emerald
+        - phase-1
+        - phase-2
+        - phase-3
+        - phase-4
+        - ruby
+        - sapphire
+
+    Sticker:
+      type: object
+      required:
+        - name
+        - image_url
+      properties:
+        name:
+          type: string
+          description: Sticker name
+        image_url:
+          type: string
+          description: Sticker image url
+
+    SaleType:
+      type: string
+      description: Type of sale.
+      enum:
+        - unknown
+        - order
+        - sale
+
+    Exterior:
+      type: string
+      description: Item exterior condition.
+      enum:
+        - battle-scarred
+        - factory-new
+        - field-tested
+        - minimal-wear
+        - not-painted
+        - well-worn
+
+    Sale:
+      type: object
+      required:
+        - market
+        - market_hash_name
+        - skin_id
+        - price
+        - sale_type
+        - stickers_supported
+      properties:
+        market:
+          type: string
+          description: Market source type
+        market_hash_name:
+          type: string
+          description: Item market hash name
+        skin_id:
+          type: string
+          description: Internal skin identifier
+        price:
+          type: integer
+          description: Sale price
+        float_part_value:
+          $ref: "#/components/schemas/FloatPartValue"
+        phase:
+          $ref: "#/components/schemas/Phase"
+        float_value:
+          type: number
+          format: float
+          description: Optional float value
+        paint_seed:
+          type: integer
+          description: Optional paint seed
+        stickers:
+          type: array
+          items:
+            $ref: "#/components/schemas/Sticker"
+        exterior:
+          $ref: "#/components/schemas/Exterior"
+        sale_type:
+          $ref: "#/components/schemas/SaleType"
+        stickers_supported:
+          type: boolean
+          description: Whether stickers are supported
+
+    BuyOrder:
+      type: object
+      required:
+        - market
+        - market_hash_name
+        - skin_id
+        - depth
+        - price
+        - updated_at
+      properties:
+        market:
+          type: string
+          description: Market source type
+        market_hash_name:
+          type: string
+          description: Item market hash name
+        skin_id:
+          type: string
+          description: Internal skin identifier
+        depth:
+          type: integer
+          description: Order depth in the book
+        float_part_value:
+          $ref: "#/components/schemas/FloatPartValue"
+        phase:
+          $ref: "#/components/schemas/Phase"
+        paint_seed:
+          type: integer
+          description: Optional paint seed
+        price:
+          type: integer
+          description: Order price
+        updated_at:
+          type: string
+          format: date-time
+
+    Item:
+      type: object
+      required:
+        - market
+        - market_hash_name
+        - skin_id
+        - image_url
+        - price
+        - offer_id
+        - item_id
+        - timestamp
+        - stickers
+      properties:
+        market:
+          type: string
+          description: Market source type
+        market_hash_name:
+          type: string
+          description: Item market hash name
+        skin_id:
+          type: string
+          description: Internal skin identifier
+        image_url:
+          type: string
+          description: Item image URL
+        price:
+          type: integer
+          description: Item price
+        owner:
+          $ref: "#/components/schemas/ItemOwner"
+        float_part_value:
+          $ref: "#/components/schemas/FloatPartValue"
+        phase:
+          $ref: "#/components/schemas/Phase"
+        float_value:
+          type: number
+          format: float
+          description: Optional float value
+        paint_seed:
+          type: integer
+          description: Optional paint seed
+        offer_id:
+          type: string
+        item_id:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        stickers:
+          type: array
+          items:
+            $ref: "#/components/schemas/Sticker"
+        exterior:
+          $ref: "#/components/schemas/Exterior"

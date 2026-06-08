@@ -1,0 +1,22 @@
+openapi: "3.0.3"
+info:
+  title: DMarket Orderbook Event
+  version: "1.0.0"
+components:
+  schemas:
+    OrderbookEvent:
+      type: object
+      required:
+        - item
+        - source
+        - event_timestamp
+      properties:
+        item:
+          $ref: "../../models.yaml#/components/schemas/BuyOrder"
+        source:
+          type: string
+          description: Emitter source identifier
+        event_timestamp:
+          type: string
+          format: date-time
+          description: When the event was emitted

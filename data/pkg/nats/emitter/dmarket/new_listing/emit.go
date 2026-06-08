@@ -13,10 +13,11 @@ func (e *Emitter) Emit(i models.Item) error {
 		return err
 	}
 
+	event := NewNewListingEvent(i)
 	subject := e.Subject(i)
-	data, err := json.Marshal(i)
+	data, err := json.Marshal(event)
 	if err != nil {
-		return fmt.Errorf("marshal item: %w", err)
+		return fmt.Errorf("marshal event: %w", err)
 	}
 	if err := e.nc.Publish(subject, data); err != nil {
 		return fmt.Errorf("publish %s: %w", subject, err)

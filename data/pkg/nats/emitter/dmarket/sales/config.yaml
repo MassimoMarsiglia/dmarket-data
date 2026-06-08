@@ -1,0 +1,10 @@
+package: sales
+generate:
+  models: true
+output: spec.gen.go
+compatibility:
+  always-prefix-enum-values: true
+output-options:
+  skip-prune: true
+import-mapping:
+  ../../models.yaml: github.com/MassimoMarsiglia/dmarket-bot/pkg/nats/emitter
